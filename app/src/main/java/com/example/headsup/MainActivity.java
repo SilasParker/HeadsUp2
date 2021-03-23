@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             switch(item.getItemId()) {
                 case R.id.nav_all:
                     selectFrag = new AllDecksFragment();
+                    ((AllDecksFragment) selectFrag).setAllDecks(deckList);
                     break;
                 case R.id.nav_favourites:
                     selectFrag = new FavouritesFragment();
