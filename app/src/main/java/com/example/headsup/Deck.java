@@ -1,6 +1,7 @@
 package com.example.headsup;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -51,6 +52,10 @@ public class Deck {
             case 2: return this.hardCards;
             default: return null;
         }
+    }
+
+    public boolean isCustom() {
+        return this.custom;
     }
 
     public int getDeckSize() {
@@ -118,6 +123,33 @@ public class Deck {
         }
         return fileName.toLowerCase();
 
+    }
+
+    private int getIconId() {
+        switch(this.iconId) {
+            case 0:
+                return R.drawable.ic_baseline_computer_24;
+            case 1:
+                return R.drawable.ic_baseline_map_24;
+            case 2:
+                return R.drawable.ic_baseline_menu_book_24;
+            case 3:
+                return R.drawable.ic_baseline_music_note_24;
+            case 4:
+                return R.drawable.ic_baseline_people_outline_24;
+            case 5:
+                return R.drawable.ic_baseline_pets_24;
+            case 6:
+                return R.drawable.ic_baseline_science_24;
+            case 7:
+                return R.drawable.ic_baseline_sports_esports_24;
+            case 8:
+                return R.drawable.ic_baseline_sports_soccer_24;
+            case 9:
+                return R.drawable.ic_baseline_tv_24;
+            default:
+                return R.drawable.ic_baseline_device_unknown_24;
+        }
     }
 
 
