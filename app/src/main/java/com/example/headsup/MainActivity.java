@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -25,12 +28,16 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Deck> deckList;
+    private ArrayList<Deck> deckList, favourites;
+    private SharedPreferences favPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        favPrefs = getSharedPreferences("Favourites", Context.MODE_PRIVATE);
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -47,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             this.deckList = getAllStoredDecks();
-
+            this.favourites = getFavouritesFromDecks(this.deckList);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -57,6 +64,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private ArrayList<Deck> getFavouritesFromDecks(ArrayList<Deck> decks) {
+        ArrayList<Deck> favs = new ArrayList<>();
+        for(Deck deck : decks) {
+            String deckPref = favPrefs.getString(deck.getFavKey(),"false");
+            if(deckPref.equals("true")) {
+                favs.add(deck);
+            }
+        }
+        return favs;
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -64,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             switch(item.getItemId()) {
                 case R.id.nav_all:
                     selectFrag = new AllDecksFragment();
-                    ((AllDecksFragment) selectFrag).setAllDecks(deckList);
+                    ((AllDecksFragment) selectFrag).setAllDecks(deckList,favourites);
                     break;
                 case R.id.nav_favourites:
                     selectFrag = new FavouritesFragment();

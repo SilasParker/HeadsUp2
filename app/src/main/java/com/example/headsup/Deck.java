@@ -41,6 +41,14 @@ public class Deck {
         return this.name;
     }
 
+    public String getFavKey() {
+        return this.name+this.author;
+    }
+
+    public int getHighScore() {
+        return this.highScore;
+    }
+
     public String getDescription() {
         return this.description;
     }
@@ -125,7 +133,7 @@ public class Deck {
 
     }
 
-    private int getIconId() {
+    public int getIconId() {
         switch(this.iconId) {
             case 0:
                 return R.drawable.ic_baseline_computer_24;

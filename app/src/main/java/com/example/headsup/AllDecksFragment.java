@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 
 public class AllDecksFragment extends Fragment {
 
-    private ArrayList<Deck> allDecks;
+    private ArrayList<Deck> allDecks, favourites;
     private final float scale = getContext().getResources().getDisplayMetrics().density;
 
     @Nullable
@@ -29,8 +30,9 @@ public class AllDecksFragment extends Fragment {
 
     }
 
-    public void setAllDecks(ArrayList<Deck> deckArrayList) {
+    public void setAllDecks(ArrayList<Deck> deckArrayList, ArrayList<Deck> favourites) {
         this.allDecks = deckArrayList;
+        this.favourites = favourites;
     }
 
     private void generateDeckGrid() {
@@ -55,7 +57,32 @@ public class AllDecksFragment extends Fragment {
             deckTitleTextView.setLayoutParams(params);
             deckViewContainer.addView(deckTitleTextView);
 
+            ImageView favouriteStar = new ImageView(getContext());
+            if(this.favourites.contains(deck)) {
+                favouriteStar.setImageResource(R.drawable.ic_baseline_star_24);
+            } else {
+                favouriteStar.setImageResource(R.drawable.ic_baseline_star_outline_24);
+            }
+            favouriteStar.setMaxHeight(Math.round(5*scale));
+            favouriteStar.setMaxWidth(Math.round(5*scale));
+            params = (RelativeLayout.LayoutParams) favouriteStar.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params.addRule(RelativeLayout.ALIGN_PARENT_END);
+            favouriteStar.setLayoutParams(params);
+            deckViewContainer.addView(favouriteStar);
 
+            ImageView icon = new ImageView(getContext());
+            icon.setImageResource(deck.getIconId());
+            icon.setMaxWidth(Math.round(15*scale));
+            icon.setMaxHeight(Math.round(15*scale));
+            params = (RelativeLayout.LayoutParams) icon.getLayoutParams();
+            params.addRule(RelativeLayout.CENTER_IN_PARENT);
+            icon.setLayoutParams(params);
+            deckViewContainer.addView(icon);
+
+            TextView highScoreTextView = new TextView(getContext());
+            highScoreTextView.setText(deck.getHighScore());
+            //CARRY ON HERE
         }
     }
 }
