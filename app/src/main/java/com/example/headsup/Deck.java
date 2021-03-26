@@ -20,9 +20,9 @@ public class Deck {
     private String name, description, author;
     private ArrayList<String> easyCards, mediumCards, hardCards;
     private int deckSize, highScore, iconId;
-    private boolean custom;
+    private boolean custom, favourite;
 
-    public Deck (String name, String description, String author, String[] easyCards, String[] mediumCards, String[] hardCards, int iconId, boolean custom, int highScore) {
+    public Deck (String name, String description, String author, String[] easyCards, String[] mediumCards, String[] hardCards, int iconId, boolean custom, int highScore, boolean favourite) {
         this.easyCards = new ArrayList<String>();
         this.mediumCards = new ArrayList<String>();
         this.hardCards = new ArrayList<String>();
@@ -35,14 +35,14 @@ public class Deck {
         this.deckSize = this.easyCards.size()+this.mediumCards.size()+this.hardCards.size();
         this.highScore = highScore;
         this.custom = custom;
+        this.iconId = iconId;
+        this.favourite = favourite;
     }
+
+    public boolean isFavourite() {return favourite;}
 
     public String getName() {
         return this.name;
-    }
-
-    public String getFavKey() {
-        return this.name+this.author;
     }
 
     public int getHighScore() {
@@ -93,6 +93,7 @@ public class Deck {
         deckJSON.put("highscore",this.highScore);
         deckJSON.put("custom",this.custom);
         deckJSON.put("icon",this.iconId);
+        deckJSON.put("favourite",this.favourite);
         return deckJSON;
     }
 

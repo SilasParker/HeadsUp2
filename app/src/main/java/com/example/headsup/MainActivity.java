@@ -29,14 +29,12 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Deck> deckList, favourites;
-    private SharedPreferences favPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        favPrefs = getSharedPreferences("Favourites", Context.MODE_PRIVATE);
 
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
@@ -54,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             this.deckList = getAllStoredDecks();
-            this.favourites = getFavouritesFromDecks(this.deckList);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -64,16 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private ArrayList<Deck> getFavouritesFromDecks(ArrayList<Deck> decks) {
-        ArrayList<Deck> favs = new ArrayList<>();
-        for(Deck deck : decks) {
-            String deckPref = favPrefs.getString(deck.getFavKey(),"false");
-            if(deckPref.equals("true")) {
-                favs.add(deck);
-            }
-        }
-        return favs;
-    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -104,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Deck> getAllStoredDecks() throws IOException, JSONException {
         ArrayList<Deck> allDecks = new ArrayList<>();
+        ArrayList<Deck> favDecks = new ArrayList<>();
         File directory = new File(String.valueOf(this.getApplicationContext().getFilesDir()));
         for(File file : directory.listFiles()) {
             if(file.isFile() && file.getPath().endsWith(".json")) {
@@ -129,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                     int icon = deckJSON.getInt("icon");
                     boolean custom = deckJSON.getBoolean("custom");
                     int highscore = deckJSON.getInt("highscore");
+                    boolean favourite = deckJSON.getBoolean("favourite");
                     if(name == null || description == null || author == null || easyJson == null || mediumJson == null || hardJson == null) {
                         validJson = false;
                     }
@@ -140,8 +130,11 @@ public class MainActivity extends AppCompatActivity {
                             validJson = false;
                         }
                         if(validJson) {
-                            Deck newDeck = new Deck(name,description,author,easy,medium,hard,icon,custom,highscore);
+                            Deck newDeck = new Deck(name,description,author,easy,medium,hard,icon,custom,highscore,favourite);
                             allDecks.add(newDeck);
+                            if(newDeck.isFavourite()) {
+                                favDecks.add(newDeck);
+                            }
                         } else {
                             Toast.makeText(this,"Invalid Deck Found",Toast.LENGTH_LONG).show();
                         }
@@ -151,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        this.favourites = favDecks;
         return allDecks;
     }
 
@@ -172,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         String[] hard = new String[]{"Meta Knight"};
         ArrayList<String> hardA = new ArrayList<>();
         hardA.addAll(Arrays.asList(hard));
-        Deck deck = new Deck("Super Smash Bros. Project","A video game that is OK at best","Silas da Boi",easy,medium,hard,1,true,0);
+        Deck deck = new Deck("Super Smash Bros. Project2","A video game that is OK at best","Silas da Boi",easy,medium,hard,1,true,0,false);
         deck.saveJsonToFile(this.getApplicationContext());
         ArrayList<Deck> ignoreMe = getAllStoredDecks();
         for(Deck decks : ignoreMe) {

@@ -21,26 +21,42 @@ import java.util.ArrayList;
 public class AllDecksFragment extends Fragment {
 
     private ArrayList<Deck> allDecks, favourites;
-    private final float scale = getContext().getResources().getDisplayMetrics().density;
+    private float scale;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        System.out.println("WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: 1");
+        scale = getContext().getResources().getDisplayMetrics().density;
+
         return inflater.inflate(R.layout.fragment_all_decks,container,false);
 
     }
 
     public void setAllDecks(ArrayList<Deck> deckArrayList, ArrayList<Deck> favourites) {
+        System.out.println("WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: 2");
         this.allDecks = deckArrayList;
         this.favourites = favourites;
+        System.out.println(allDecks);
+
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if(this.allDecks != null) {
+            generateDeckGrid();
+        }
     }
 
     private void generateDeckGrid() {
-        GridView grid = (GridView) getActivity().findViewById(R.id.all_decks_grid);
+
+        GridView grid = (GridView) getView().findViewById(R.id.all_decks_grid);
         for(Deck deck : allDecks) {
             RelativeLayout deckViewContainer = new RelativeLayout(getContext());
-            deckViewContainer.getLayoutParams().height = (int) (100 * scale + 0.5f);
-            grid.addView(deckViewContainer);
+            RelativeLayout.LayoutParams containerParams = new RelativeLayout.LayoutParams(100,(int) (100*scale+0.5f));
+            deckViewContainer.setLayoutParams(containerParams);
+            //deckViewContainer.getLayoutParams().height = (int) (100 * scale + 0.5f);
+            grid.getParent().addView(deckViewContainer);
 
             if(deck.isCustom()) {
                 Button deleteButton = new Button(getContext());
@@ -82,7 +98,11 @@ public class AllDecksFragment extends Fragment {
 
             TextView highScoreTextView = new TextView(getContext());
             highScoreTextView.setText(deck.getHighScore());
-            //CARRY ON HERE
+            params = (RelativeLayout.LayoutParams) highScoreTextView.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_BOTTOM);
+            params.addRule(RelativeLayout.ALIGN_RIGHT);
+            highScoreTextView.setLayoutParams(params);
+            deckViewContainer.addView(highScoreTextView);
         }
     }
 }
