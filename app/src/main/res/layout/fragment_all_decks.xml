@@ -10,23 +10,26 @@
         android:id="@+id/all_decks_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/all_decks_grid" />
 
 
     <GridView
         android:id="@+id/all_decks_grid"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="500dp"
         android:layout_gravity="center"
         android:layout_marginBottom="683dp"
         android:numColumns="2"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@id/all_decks_search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/all_decks_search" />
+
+         />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

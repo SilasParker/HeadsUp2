@@ -45,6 +45,10 @@ public class GridAdapter extends BaseAdapter {
         if(convertView == null) {
             convertView = inflater.inflate(R.layout.row_item,null);
         }
+        if(!decks.get(position).isCustom()) {
+            convertView.findViewById(R.id.delete).setVisibility(View.GONE);
+        }
+
         TextView deckNameView = convertView.findViewById(R.id.deck_name);
         ImageView iconView = convertView.findViewById(R.id.icon);
         deckNameView.setText(decks.get(position).getName());
@@ -56,9 +60,16 @@ public class GridAdapter extends BaseAdapter {
             favouriteView.setImageResource(R.drawable.ic_baseline_star_outline_24);
         }
         TextView highScoreView = convertView.findViewById(R.id.highscore);
-        highScoreView.setText(decks.get(position).getHighScore());
+        highScoreView.setText(String.valueOf(decks.get(position).getHighScore()));
+
+
+        convertView.setBackgroundResource(R.color.teal_200);
         return convertView;
     }
+
+    //Write functions to remove current deck etc. need reference to mainactivity
+
+
 
 
 }
