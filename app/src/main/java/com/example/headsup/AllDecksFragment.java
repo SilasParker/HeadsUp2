@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 public class AllDecksFragment extends Fragment {
 
+    private GridView grid;
+    private GridAdapter adapter;
     private ArrayList<Deck> allDecks, favourites;
     private float scale;
 
@@ -31,6 +33,7 @@ public class AllDecksFragment extends Fragment {
 
         return inflater.inflate(R.layout.fragment_all_decks,container,false);
 
+
     }
 
     public void setAllDecks(ArrayList<Deck> deckArrayList, ArrayList<Deck> favourites) {
@@ -39,12 +42,15 @@ public class AllDecksFragment extends Fragment {
         this.favourites = favourites;
         System.out.println(allDecks);
 
+
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         if(this.allDecks != null) {
-            generateDeckGrid();
+            adapter = new GridAdapter(getContext(),allDecks);
+            grid = (GridView) getView().findViewById(R.id.all_decks_grid);
+            grid.setAdapter(adapter);
         }
     }
 
@@ -56,7 +62,7 @@ public class AllDecksFragment extends Fragment {
             RelativeLayout.LayoutParams containerParams = new RelativeLayout.LayoutParams(100,(int) (100*scale+0.5f));
             deckViewContainer.setLayoutParams(containerParams);
             //deckViewContainer.getLayoutParams().height = (int) (100 * scale + 0.5f);
-            grid.getParent().addView(deckViewContainer);
+            //grid.getParent().addView(deckViewContainer);
 
             if(deck.isCustom()) {
                 Button deleteButton = new Button(getContext());
