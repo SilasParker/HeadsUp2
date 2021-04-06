@@ -62,12 +62,23 @@ public class GridAdapter extends BaseAdapter {
         TextView highScoreView = convertView.findViewById(R.id.highscore);
         highScoreView.setText(String.valueOf(decks.get(position).getHighScore()));
 
+        TextView deleteView = convertView.findViewById(R.id.delete);
+        deleteView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeDeck(position);
+            }
+        });
 
         convertView.setBackgroundResource(R.color.teal_200);
         return convertView;
     }
 
-    //Write functions to remove current deck etc. need reference to mainactivity
+    private void removeDeck(int position) {
+        MainActivity.deckList.remove(position);
+    }
+
+
 
 
 

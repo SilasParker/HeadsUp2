@@ -28,14 +28,19 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Deck> deckList, favourites;
+    public static ArrayList<Deck> deckList, favourites;
+    public static SharedPreferences sharedPrefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        sharedPrefs = getSharedPreferences("headsUpPrefs",Context.MODE_PRIVATE);
+        if(!sharedPrefs.contains("firstAccess")) {
+            setUpAppForFirstRun();
+        }
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -172,6 +177,18 @@ public class MainActivity extends AppCompatActivity {
         for(Deck decks : ignoreMe) {
             System.out.println("XXXXXXXXXXX:"+decks.getName());
         }
+    }
+
+    private void setUpAppForFirstRun() {
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putInt("timer",120);
+        editor.putInt("difficulty",2);
+        editor.putBoolean("bonusTime",false);
+        editor.putBoolean("soundEffects",true);
+        editor.putInt("cardColour",1);
+        editor.putInt("textColour",1);
+        editor.putBoolean("firstAccess",false);
+        editor.commit();
     }
 
 
