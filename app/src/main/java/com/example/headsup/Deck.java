@@ -39,6 +39,25 @@ public class Deck {
         this.favourite = favourite;
     }
 
+    public String toString() {
+        String toReturn = "";
+        toReturn += this.name+"\n";
+        toReturn += this.description+"\n";
+        toReturn += "Easy: ";
+        for(int i = 0; i < 3; i++) {
+            for (String card : getDeckByDifficulty(i)) {
+                toReturn += card + ", ";
+            }
+            toReturn += "\n";
+        }
+        toReturn += "Author: "+this.author+"\n";
+        toReturn += "Favourite: "+this.favourite+"\n";
+        toReturn += "Custom: "+this.custom+"\n";
+        toReturn += "IconID: "+this.iconId+"\n";
+        toReturn += "Highscore: "+this.highScore+"\n";
+        return toReturn;
+    }
+
     public boolean isFavourite() {return favourite;}
 
     public String getName() {
@@ -53,7 +72,7 @@ public class Deck {
         return this.description;
     }
 
-    public ArrayList<String> getDeck(int difficulty) {
+    public ArrayList<String> getDeckByDifficulty(int difficulty) {
         switch(difficulty) {
             case 0: return this.easyCards;
             case 1: return this.mediumCards;
@@ -117,7 +136,7 @@ public class Deck {
     private String getDirectorySafeName() {
         String string = this.name;
         char[] unsuitableChars = { '#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', ' ', '$', '!', '\'', '"',
-                ':', '@', '+', '`', '|', '=', '.' };
+                ':', '@', '+', '`', '|', '=', '.', '(', ')' };
         String fileName = "";
         for (int i = 0; i < string.length(); i++) {
             boolean charSafe = true;

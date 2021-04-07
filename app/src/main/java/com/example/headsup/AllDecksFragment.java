@@ -22,7 +22,7 @@ public class AllDecksFragment extends Fragment {
 
     private GridView grid;
     private GridAdapter adapter;
-    private ArrayList<Deck> allDecks, favourites;
+    private DeckList deckList;
     private float scale;
 
     @Nullable
@@ -36,19 +36,18 @@ public class AllDecksFragment extends Fragment {
 
     }
 
-    public void setAllDecks(ArrayList<Deck> deckArrayList, ArrayList<Deck> favourites) {
+    public void setAllDecks(DeckList deckList) {
         System.out.println("WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: 2");
-        this.allDecks = deckArrayList;
-        this.favourites = favourites;
-        System.out.println(allDecks);
+        this.deckList = deckList;
+        System.out.println(deckList);
 
 
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        if(this.allDecks != null) {
-            adapter = new GridAdapter(getContext(),allDecks);
+        if(this.deckList != null) {
+            adapter = new GridAdapter(getContext(),deckList.getAllDecks());
             grid = (GridView) getView().findViewById(R.id.all_decks_grid);
             grid.setAdapter(adapter);
         }

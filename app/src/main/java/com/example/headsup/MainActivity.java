@@ -28,7 +28,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static ArrayList<Deck> deckList, favourites;
+    public static DeckList deckList;
     public static SharedPreferences sharedPrefs;
 
 
@@ -47,16 +47,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new AllDecksFragment()).commit();
 
         try {
-            test();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            this.deckList = getAllStoredDecks();
+            this.deckList.setAllDecks(getAllStoredDecks());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -75,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             switch(item.getItemId()) {
                 case R.id.nav_all:
                     selectFrag = new AllDecksFragment();
-                    ((AllDecksFragment) selectFrag).setAllDecks(deckList,favourites);
+                    ((AllDecksFragment) selectFrag).setAllDecks(deckList);
                     break;
                 case R.id.nav_favourites:
                     selectFrag = new FavouritesFragment();
@@ -149,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        this.favourites = favDecks;
         return allDecks;
     }
 
@@ -159,24 +149,6 @@ public class MainActivity extends AppCompatActivity {
             arrayToReturn[i] = array.get(i).toString();
         }
         return arrayToReturn;
-    }
-
-    private void test() throws IOException, JSONException {
-        String[] easy = new String[]{"Pikachu","Pichu","Jigglypuff"};
-        ArrayList<String> easyA = new ArrayList<>();
-        easyA.addAll(Arrays.asList(easy));
-        String[] medium = new String[]{"Mewtwo","Game and Watch"};
-        ArrayList<String> mediumA = new ArrayList<>();
-        mediumA.addAll(Arrays.asList(medium));
-        String[] hard = new String[]{"Meta Knight"};
-        ArrayList<String> hardA = new ArrayList<>();
-        hardA.addAll(Arrays.asList(hard));
-        Deck deck = new Deck("Super Smash Bros. Project2","A video game that is OK at best","Silas da Boi",easy,medium,hard,1,true,0,false);
-        deck.saveJsonToFile(this.getApplicationContext());
-        ArrayList<Deck> ignoreMe = getAllStoredDecks();
-        for(Deck decks : ignoreMe) {
-            System.out.println("XXXXXXXXXXX:"+decks.getName());
-        }
     }
 
     private void setUpAppForFirstRun() {
