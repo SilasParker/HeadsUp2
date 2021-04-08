@@ -30,4 +30,12 @@ public class DeckList {
         Deck newDeck = new Deck(name, description, author, easyCards, mediumCards, hardCards, iconId, custom, highScore, favourite);
         this.decks.add(newDeck);
     }
+
+    public Deck getDeckAt(int position) {
+        return decks.get(position);
+    }
+
+    public void remove(int position) {
+        decks.remove(position);
+    }
 }

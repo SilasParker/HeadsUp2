@@ -28,6 +28,10 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
+    /*
+                        TODO:
+     -make popup overlay non transparent
+    */
     public static DeckList deckList;
     public static SharedPreferences sharedPrefs;
 
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new AllDecksFragment()).commit();
-
+        deckList = new DeckList();
         try {
             this.deckList.setAllDecks(getAllStoredDecks());
         } catch (IOException e) {

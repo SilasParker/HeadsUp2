@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/deckName"
+        android:id="@+id/startGameDeckName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/exitDeckButton"
+        android:id="@+id/startGameExitDeckButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="X"
@@ -29,7 +29,7 @@
 
 
     <TextView
-        android:id="@+id/deckDescription"
+        android:id="@+id/startGameDeckDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
@@ -38,19 +38,19 @@
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis libero ac nisi hendrerit blandit non sed libero. Aliquam ut condimentum justo. Pellentesque aliquet sapien sit amet tellus dignissim, vel ultricies dolor sodales. Nam sit amet sollicitudin neque. Maecenas consequat nisl eget vehicula finibus. Vivamus in elit ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc vehicula eu leo non molestie. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi volutpat mi erat, sed maximus quam mattis a. In at pretium nisl. Donec sem odio, aliquet sit amet blandit ac, fringilla vitae elit. Praesent sit amet nulla dignissim, molestie nibh vel, elementum mi."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/deckName" />
+        app:layout_constraintTop_toBottomOf="@+id/startGameDeckName" />
 
     <RadioGroup
-        android:id="@+id/difficultyRadioGroup"
+        android:id="@+id/startGameDifficultyRadioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/deckDescription">
+        app:layout_constraintTop_toBottomOf="@id/startGameDeckDescription">
 
         <RadioButton
-            android:id="@+id/easyRadio"
+            android:id="@+id/startGameEasyRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -58,7 +58,7 @@
             android:layout_margin="10dp"/>
 
         <RadioButton
-            android:id="@+id/mediumRadio"
+            android:id="@+id/startGameMediumRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -66,11 +66,42 @@
             android:layout_margin="10dp"/>
 
         <RadioButton
-            android:id="@+id/hardRadio"
+            android:id="@+id/startGameHardRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="HARD"
             android:layout_margin="10dp"/>
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/startGameTimerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TIMER"
+        app:layout_constraintTop_toBottomOf="@id/startGameDifficultyRadioGroup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/startGameTimerSlider"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:valueFrom="30.0"
+        android:valueTo="300.0"
+        android:value="120.0"
+        android:stepSize="1.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startGameTimerTextView" />
+
+    <Button
+        android:id="@+id/startGameStartButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="START"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startGameTimerSlider"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

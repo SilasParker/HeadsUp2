@@ -8,18 +8,21 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import java.util.ArrayList;
 
 public class GridAdapter extends BaseAdapter {
     private ArrayList<Deck> decks;
-
+    private Fragment parentFragment;
     private Context context;
     private LayoutInflater inflater;
 
 
-    GridAdapter(Context c, ArrayList decks) {
+    GridAdapter(Context c, ArrayList decks, Fragment fragment) {
         this.context = c;
         this.decks = decks;
+        this.parentFragment = fragment;
     }
 
     @Override
@@ -66,11 +69,29 @@ public class GridAdapter extends BaseAdapter {
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 removeDeck(position);
+                if(parentFragment instanceof AllDecksFragment) {
+                    AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
+                    allDecksFragment.updateGrid();
+                }
             }
         });
 
         convertView.setBackgroundResource(R.color.teal_200);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(parentFragment instanceof AllDecksFragment) {
+                    AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
+                    allDecksFragment.onDeckSelectedToPlay(position);
+                }
+            }
+
+
+
+
+        });
         return convertView;
     }
 
