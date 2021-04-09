@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
                         TODO:
-     -make popup overlay non transparent
+     -continue working on game
     */
     public static DeckList deckList;
     public static SharedPreferences sharedPrefs;
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpAppForFirstRun() {
         SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putInt("timer",120);
+        editor.putFloat("timer",120f);
         editor.putInt("difficulty",2);
         editor.putBoolean("bonusTime",false);
         editor.putBoolean("soundEffects",true);

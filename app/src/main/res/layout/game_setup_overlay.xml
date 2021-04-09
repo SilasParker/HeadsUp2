@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF">
 
     <TextView
         android:id="@+id/startGameDeckName"
@@ -34,8 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:gravity="center"
-        android:textSize="15sp"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis libero ac nisi hendrerit blandit non sed libero. Aliquam ut condimentum justo. Pellentesque aliquet sapien sit amet tellus dignissim, vel ultricies dolor sodales. Nam sit amet sollicitudin neque. Maecenas consequat nisl eget vehicula finibus. Vivamus in elit ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc vehicula eu leo non molestie. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi volutpat mi erat, sed maximus quam mattis a. In at pretium nisl. Donec sem odio, aliquet sit amet blandit ac, fringilla vitae elit. Praesent sit amet nulla dignissim, molestie nibh vel, elementum mi."
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/startGameDeckName" />
@@ -45,33 +46,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/startGameDeckDescription">
 
         <RadioButton
             android:id="@+id/startGameEasyRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="EASY"
-            android:layout_margin="10dp"/>
+            android:text="EASY" />
 
         <RadioButton
             android:id="@+id/startGameMediumRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="MEDIUM"
-            android:layout_margin="10dp"/>
+            android:text="MEDIUM" />
 
         <RadioButton
             android:id="@+id/startGameHardRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="HARD"
-            android:layout_margin="10dp"/>
+            android:text="HARD" />
     </RadioGroup>
 
     <TextView
@@ -79,18 +80,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TIMER"
-        app:layout_constraintTop_toBottomOf="@id/startGameDifficultyRadioGroup"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/startGameDifficultyRadioGroup" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/startGameTimerSlider"
         android:layout_width="300dp"
         android:layout_height="50dp"
+        android:stepSize="1.0"
+        android:value="120.0"
         android:valueFrom="30.0"
         android:valueTo="300.0"
-        android:value="120.0"
-        android:stepSize="1.0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/startGameTimerTextView" />
@@ -100,8 +101,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="START"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/startGameTimerSlider"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startGameTimerSlider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,9 @@
 package com.example.headsup;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.slider.Slider;
 
 import org.w3c.dom.Text;
 
@@ -73,6 +79,23 @@ public class AllDecksFragment extends Fragment {
         deckName.setText(deckList.getDeckAt(deckSelected).getName());
         TextView deckDescription = (TextView) popupView.findViewById(R.id.startGameDeckDescription);
         deckDescription.setText(deckList.getDeckAt(deckSelected).getDescription());
+        Slider timer = (Slider) popupView.findViewById(R.id.startGameTimerSlider);
+        float prefFloat = MainActivity.sharedPrefs.getFloat("timer",120.0f);
+        timer.setValue(prefFloat);
+        RadioButton radBut;
+        switch(MainActivity.sharedPrefs.getInt("difficulty",2)) {
+            case 1:
+                radBut = (RadioButton) popupView.findViewById(R.id.startGameEasyRadio);
+                break;
+            case 3:
+                radBut = (RadioButton) popupView.findViewById(R.id.startGameHardRadio);
+                break;
+            default:
+                radBut = (RadioButton) popupView.findViewById(R.id.startGameMediumRadio);
+                break;
+        }
+        radBut.toggle();
+
 
         final PopupWindow popUp = new PopupWindow(popupView,width,height, true);
 
