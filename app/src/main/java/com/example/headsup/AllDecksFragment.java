@@ -1,8 +1,10 @@
 package com.example.headsup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -95,7 +97,28 @@ public class AllDecksFragment extends Fragment {
                 break;
         }
         radBut.toggle();
-
+        Button startBtn = (Button) popupView.findViewById(R.id.startGameStartButton);
+        startBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GameActivity gameActivity = new GameActivity();
+                String difficultyStr = radBut.getText().toString();
+                int difficulty = 0;
+                if(difficultyStr.equals("MEDIUM")) {
+                    difficulty = 1;
+                } else if(difficultyStr.equals("HARD")) {
+                    difficulty = 2;
+                }
+                int timerInt = (int) timer.getValue();
+                //gameActivity.setGame(deckList.getDeckAt(deckSelected),timerInt,difficulty);
+                Intent intent = new Intent(getActivity(),gameActivity.getClass());
+                Parcelable parcelable = new Par //CARRY ON
+                intent.putExtra("deck", (Parcelable) deckList.getDeckAt(deckSelected));
+                intent.putExtra("timer",timerInt);
+                intent.putExtra("difficulty",difficulty);
+                startActivity(intent);
+            }
+        });
 
         final PopupWindow popUp = new PopupWindow(popupView,width,height, true);
 

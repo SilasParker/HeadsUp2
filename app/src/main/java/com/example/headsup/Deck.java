@@ -2,6 +2,8 @@ package com.example.headsup;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -16,7 +18,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Deck {
+public class Deck implements Parcelable {
     private String name, description, author;
     private ArrayList<String> easyCards, mediumCards, hardCards;
     private int deckSize, highScore, iconId;
@@ -38,6 +40,32 @@ public class Deck {
         this.iconId = iconId;
         this.favourite = favourite;
     }
+
+    protected Deck(Parcel in) {
+        name = in.readString();
+        description = in.readString();
+        author = in.readString();
+        easyCards = in.createStringArrayList();
+        mediumCards = in.createStringArrayList();
+        hardCards = in.createStringArrayList();
+        deckSize = in.readInt();
+        highScore = in.readInt();
+        iconId = in.readInt();
+        custom = in.readByte() != 0;
+        favourite = in.readByte() != 0;
+    }
+
+    public static final Creator<Deck> CREATOR = new Creator<Deck>() {
+        @Override
+        public Deck createFromParcel(Parcel in) {
+            return new Deck(in);
+        }
+
+        @Override
+        public Deck[] newArray(int size) {
+            return new Deck[size];
+        }
+    };
 
     public String toString() {
         String toReturn = "";
@@ -181,4 +209,23 @@ public class Deck {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(author);
+        dest.writeStringList(easyCards);
+        dest.writeStringList(mediumCards);
+        dest.writeStringList(hardCards);
+        dest.writeInt(deckSize);
+        dest.writeInt(highScore);
+        dest.writeInt(iconId);
+        dest.writeByte((byte) (custom ? 1 : 0));
+        dest.writeByte((byte) (favourite ? 1 : 0));
+    }
 }
