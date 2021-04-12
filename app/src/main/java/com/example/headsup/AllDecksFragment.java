@@ -112,8 +112,7 @@ public class AllDecksFragment extends Fragment {
                 int timerInt = (int) timer.getValue();
                 //gameActivity.setGame(deckList.getDeckAt(deckSelected),timerInt,difficulty);
                 Intent intent = new Intent(getActivity(),gameActivity.getClass());
-                Parcelable parcelable = new Par //CARRY ON
-                intent.putExtra("deck", (Parcelable) deckList.getDeckAt(deckSelected));
+                intent.putExtra("deck", deckList.getDeckAt(deckSelected));
                 intent.putExtra("timer",timerInt);
                 intent.putExtra("difficulty",difficulty);
                 startActivity(intent);

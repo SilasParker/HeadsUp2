@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -19,11 +20,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     private Game game;
     private ArrayList<String> deck;
-    private TextView cardName, timerView, scoreView, countdownView;
+    private TextView cardName, timerView, scoreView, countdownView, gamePauseTextView;
     private String currentCard;
     private SensorManager sensorManager;
     private Sensor accSensor;
     private long timeLastHeldProperly;
+    private boolean initialGameStart;
 
     //9 < X < 11 || -9 < X < -11 (this sees what side it's on)
     //-5 < Y < 5 //phone is on it's side
@@ -43,6 +45,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.countdownView = findViewById(R.id.gameStartCountdown);
         this.timeLastHeldProperly = 0L;
         setGame(getIntent().getParcelableExtra("deck"),getIntent().getIntExtra("timer",120),getIntent().getIntExtra("difficulty",1));
+        this.initialGameStart = false;
+        this.gamePauseTextView = findViewById(R.id.gamePauseText);
     }
 
     @Override
@@ -57,6 +61,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void readyToStart() {
+        initialGameStart = true;
         game.start();
     }
 
@@ -68,20 +73,31 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
+            if(initialGameStart) {
+                this.cardName.setVisibility(View.VISIBLE);
+                this.timerView.setVisibility(View.VISIBLE);
+                this.scoreView.setVisibility(View.VISIBLE);
+                this.countdownView.setVisibility(View.GONE);
+                this.gamePauseTextView.setVisibility(View.INVISIBLE);
+                this.
+                initialGameStart = false;
+            }
             if(game.hasGameStarted()) {
                 countdownView.setText("GOT EEEEM");
             } else {
                 if(heldProperly(x,y,z)) {
                     if(timeLastHeldProperly != 0L) {
-                        if(timeNow >= (timeLastHeldProperly += 1*1000)) {
+                        if(timeNow-timeLastHeldProperly >= 1000) {
                             game.countdown();
-                            countdownView.setText(game.getCountdown());
+                            countdownView.setText(String.valueOf(game.getCountdown()));
                             if(game.getCountdown() == 0) {
                                 readyToStart();
                             } else {
                                 timeLastHeldProperly = timeNow;
                             }
                         }
+                    } else {
+                        timeLastHeldProperly = timeNow;
                     }
                 }
             }
@@ -90,8 +106,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     private boolean heldProperly(float x, float y, float z) {
         if(((x > 9 && x < 11) || (x < -9 && x > -11)) && (y > -5 && y < 5) && (z > -7.5 && z < 7.5)) {
+            System.out.println("HELD CORRECT");
             return true;
         }
+        System.out.println("HELD INCORRECT");
         return false;
     }
 

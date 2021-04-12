@@ -31,6 +31,10 @@ public class DeckList {
         this.decks.add(newDeck);
     }
 
+    public void addLiteralDeck(Deck deck) {
+        this.decks.add(deck);
+    }
+
     public Deck getDeckAt(int position) {
         return decks.get(position);
     }

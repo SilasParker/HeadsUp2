@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
                         TODO:
-     -continue working on game
+     -why does game info not show on physical mobile
     */
     public static DeckList deckList;
     public static SharedPreferences sharedPrefs;
@@ -50,16 +50,29 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new AllDecksFragment()).commit();
         deckList = new DeckList();
+        /*
+        test();
+        try {
+            deckList.getDeckAt(0).saveJsonToFile(this);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
         try {
             this.deckList.setAllDecks(getAllStoredDecks());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+
         }
 
 
     }
+
+    
 
 
 
@@ -165,6 +178,12 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("textColour",1);
         editor.putBoolean("firstAccess",false);
         editor.commit();
+    }
+
+    private void test() {
+        Deck deck = new Deck("Smash","It's a smash game...","Silas",new String[]{"Peach","Bayonetta","Meta Knight"}, new String[]{"Fox","Kirby"},new String[]{"Pikachu"},1,true,0,true);
+        deckList.addLiteralDeck(deck);
+
     }
 
 
