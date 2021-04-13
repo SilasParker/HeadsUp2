@@ -20,6 +20,7 @@ public class Game {
         this.difficulty = difficulty;
         this.scoreOrder = new ArrayList<>();
         this.deckUsed = getUsedDeck();
+        System.out.println("DECK USED: "+getUsedDeck());
         this.paused = true;
         this.gameStarted = false;
         this.countdown = 3;
@@ -27,13 +28,26 @@ public class Game {
 
     public void start() {
         this.gameStarted = true;
+        setNextCard();
     }
 
     private void setNextCard() {
-        Random r = new Random();
-        int randomNum = r.nextInt(deckUsed.size());
-        currentCard = deckUsed.get(randomNum);
-        deckUsed.remove(randomNum);
+        if(deckUsed.size() > 0) {
+            Random r = new Random();
+            System.out.println("DECK DIFFICULTY: " + this.difficulty);
+            System.out.println("DECK USED SIZE IS: " + deckUsed.size());
+            int randomNum = r.nextInt(deckUsed.size());
+
+            currentCard = deckUsed.get(randomNum);
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX REMOVING: "+deckUsed.get(randomNum));
+            deckUsed.remove(randomNum);
+        } else {
+            currentCard = null;
+        }
+    }
+
+    public String getCurrentCard() {
+        return this.currentCard;
     }
 
     public void countdown() {
@@ -73,14 +87,20 @@ public class Game {
         return this.timer;
     }
 
+    public void decrementTimer() {
+        this.timer--;
+    }
+
     public void addToCorrect(String answer) {
         correct.add(answer);
         scoreOrder.add(true);
+        setNextCard();
     }
 
     public void addToIncorrect(String answer) {
         incorrect.add(answer);
         scoreOrder.add(false);
+        setNextCard();
     }
 
     public ArrayList<String> getUsedDeck() {

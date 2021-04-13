@@ -32,8 +32,11 @@ public class Deck implements Parcelable {
         this.description = description;
         this.author = author;
         this.easyCards.addAll(Arrays.asList(easyCards));
+        this.mediumCards.addAll(this.easyCards);
         this.mediumCards.addAll(Arrays.asList(mediumCards));
+        this.hardCards.addAll(this.mediumCards);
         this.hardCards.addAll(Arrays.asList(hardCards));
+
         this.deckSize = this.easyCards.size()+this.mediumCards.size()+this.hardCards.size();
         this.highScore = highScore;
         this.custom = custom;
@@ -66,6 +69,13 @@ public class Deck implements Parcelable {
             return new Deck[size];
         }
     };
+
+    public void toggleFavourite(Context context) throws IOException, JSONException {
+        this.favourite = !this.favourite;
+        saveJsonToFile(context);
+        System.out.println("Favourite toggled");
+        System.out.println(easyCards+"\n"+mediumCards+"\n"+hardCards);
+    }
 
     public String toString() {
         String toReturn = "";
@@ -101,6 +111,7 @@ public class Deck implements Parcelable {
     }
 
     public ArrayList<String> getDeckByDifficulty(int difficulty) {
+        ArrayList<String> deckToReturn = new ArrayList<>();
         switch(difficulty) {
             case 0: return this.easyCards;
             case 1: return this.mediumCards;
@@ -156,6 +167,19 @@ public class Deck implements Parcelable {
             bufferedWriter.close();
         } else {
             Toast.makeText(context,"File exists",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void removeJsonFromDir(Context context) {
+        String deckFileName = getDirectorySafeName()+".json";
+        File file = new File(context.getFilesDir(),deckFileName);
+        if(file.exists()) {
+            boolean deleted  = file.delete();
+            if(!deleted) {
+                Toast.makeText(context,"Not deleted for some reason",Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(context,"File does not exist",Toast.LENGTH_LONG).show();
         }
     }
 

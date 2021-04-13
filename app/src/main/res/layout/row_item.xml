@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="200dp"
+    android:layout_height="250dp"
     android:gravity="center">
 
     <TextView
@@ -17,39 +17,38 @@
         android:layout_height="20dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="10dp"
-        android:autoSizeMaxTextSize="20dp"
-        android:autoSizeStepGranularity="1dp"
-        android:text="Deck Name"
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"/>
+        android:autoSizeMaxTextSize="20dp"
+        android:autoSizeMinTextSize="10dp"
+        android:autoSizeStepGranularity="1dp"
+        android:autoSizeTextType="uniform"
+        android:text="Deck Name" />
 
     <ImageView
         android:id="@+id/favourite_star"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true" />
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
         android:layout_alignParentBottom="true"
 
         android:layout_centerInParent="true"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:id="@+id/highscore"
-        android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10dp"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
-
+        android:clickable="true"
+        android:textSize="20dp" />
 
 
 </RelativeLayout>

@@ -25,7 +25,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager sensorManager;
     private Sensor accSensor;
     private long timeLastHeldProperly;
-    private boolean initialGameStart;
+    private boolean initialGameStart, heldIncorrectly, gameInProgress;
 
     //9 < X < 11 || -9 < X < -11 (this sees what side it's on)
     //-5 < Y < 5 //phone is on it's side
@@ -47,6 +47,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setGame(getIntent().getParcelableExtra("deck"),getIntent().getIntExtra("timer",120),getIntent().getIntExtra("difficulty",1));
         this.initialGameStart = false;
         this.gamePauseTextView = findViewById(R.id.gamePauseText);
+        this.gameInProgress = true;
     }
 
     @Override
@@ -65,25 +66,81 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         game.start();
     }
 
+    private void setCurrentCard() {
+        this.currentCard = game.getCurrentCard();
+    }
+
+    private void displayNextCard() {
+        this.cardName.setText(currentCard);
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
 
         long timeNow = System.currentTimeMillis();
-        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER && gameInProgress) {
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
+
+            System.out.println(x+" "+y+" "+z);
             if(initialGameStart) {
                 this.cardName.setVisibility(View.VISIBLE);
+                cardName.setText(game.getCurrentCard());
                 this.timerView.setVisibility(View.VISIBLE);
                 this.scoreView.setVisibility(View.VISIBLE);
                 this.countdownView.setVisibility(View.GONE);
                 this.gamePauseTextView.setVisibility(View.INVISIBLE);
-                this.
+                gamePauseTextView.setText("Hold phone correctly to continue playing");
                 initialGameStart = false;
             }
             if(game.hasGameStarted()) {
-                countdownView.setText("GOT EEEEM");
+                if(game.getCurrentCard() == null) {
+                    gameInProgress = false;
+                    //finish game (out of cards), move onto score
+                }
+                if(heldProperly(x,y,z)) {
+                    if(heldIncorrectly) {
+                        this.cardName.setVisibility(View.VISIBLE);
+                        this.timerView.setVisibility(View.VISIBLE);
+                        this.scoreView.setVisibility(View.VISIBLE);
+                        this.gamePauseTextView.setVisibility(View.INVISIBLE);
+                        heldIncorrectly = false;
+                    }
+                    if(timeNow-timeLastHeldProperly >= 1000) {
+                        game.decrementTimer();
+                        this.timerView.setText(String.valueOf(game.getTimer()));
+                        if(game.getTimer() < 0) {
+                            gameInProgress = false;
+                            //finish game, move on to score
+                        } else {
+                            timeLastHeldProperly = timeNow;
+                        }
+                    }
+
+
+
+                } else if(turnedToCorrect(x,y,z)) {
+                    System.out.println("TURNED FOR CORRECT");
+                    game.addToCorrect(currentCard);
+                    game.incrementScore();
+                    currentCard = game.getCurrentCard();
+                    cardName.setText(currentCard);
+                } else if(turnedToSkip(x,y,z)) {
+                    System.out.println("TURNED FOR SKIP, SKIPPING: "+currentCard);
+
+                    game.addToIncorrect(currentCard);
+                    currentCard = game.getCurrentCard();
+                    System.out.println("CARD IS NOW "+currentCard);
+                    cardName.setText(currentCard);
+                } else {
+                    heldIncorrectly = true;
+                    this.cardName.setVisibility(View.INVISIBLE);
+                    this.timerView.setVisibility(View.INVISIBLE);
+                    this.scoreView.setVisibility(View.INVISIBLE);
+                    this.gamePauseTextView.setVisibility(View.VISIBLE);
+
+                }
             } else {
                 if(heldProperly(x,y,z)) {
                     if(timeLastHeldProperly != 0L) {
@@ -92,6 +149,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                             countdownView.setText(String.valueOf(game.getCountdown()));
                             if(game.getCountdown() == 0) {
                                 readyToStart();
+                                this.heldIncorrectly = false;
                             } else {
                                 timeLastHeldProperly = timeNow;
                             }
@@ -102,6 +160,22 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         }
+    }
+
+    private boolean turnedToCorrect(float x, float y, float z) {
+        if(((x > 9 && x < 11) || (x < -9 && x > -11)) && (y > -5 && y < 5) && (z < -7.5)) {
+            System.out.println("ANSWER CORRECT");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean turnedToSkip(float x, float y, float z) {
+        if((x > -1 && x < 1) && (y > -1 && y < 1) && (z > 7.5)) {
+            System.out.println("ANSWER SKIPPED");
+            return true;
+        }
+        return false;
     }
 
     private boolean heldProperly(float x, float y, float z) {

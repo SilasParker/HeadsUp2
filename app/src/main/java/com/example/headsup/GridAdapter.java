@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class GridAdapter extends BaseAdapter {
@@ -54,6 +57,7 @@ public class GridAdapter extends BaseAdapter {
 
         TextView deckNameView = convertView.findViewById(R.id.deck_name);
         ImageView iconView = convertView.findViewById(R.id.icon);
+
         deckNameView.setText(decks.get(position).getName());
         iconView.setImageResource(decks.get(position).getIconId());
         ImageView favouriteView = convertView.findViewById(R.id.favourite_star);
@@ -62,6 +66,23 @@ public class GridAdapter extends BaseAdapter {
         } else {
             favouriteView.setImageResource(R.drawable.ic_baseline_star_outline_24);
         }
+        favouriteView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                try {
+                    toggleFavouriteOnDeck(position);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(parentFragment instanceof AllDecksFragment) {
+                    AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
+                    allDecksFragment.updateGrid();
+                }
+            }
+        });
         TextView highScoreView = convertView.findViewById(R.id.highscore);
         highScoreView.setText(String.valueOf(decks.get(position).getHighScore()));
 
@@ -71,6 +92,7 @@ public class GridAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                 removeDeck(position);
+
                 if(parentFragment instanceof AllDecksFragment) {
                     AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
                     allDecksFragment.updateGrid();
@@ -97,6 +119,11 @@ public class GridAdapter extends BaseAdapter {
 
     private void removeDeck(int position) {
         MainActivity.deckList.remove(position);
+    }
+
+    private void toggleFavouriteOnDeck(int position) throws IOException, JSONException {
+        MainActivity.deckList.toggleDeckFavourite(position, context);
+
     }
 
 

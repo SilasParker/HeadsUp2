@@ -2,6 +2,7 @@ package com.example.headsup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
                         TODO:
-     -why does game info not show on physical mobile
+     -why do cards show up with the incorrect name?
     */
     public static DeckList deckList;
     public static SharedPreferences sharedPrefs;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new AllDecksFragment()).commit();
-        deckList = new DeckList();
+        deckList = new DeckList(getApplicationContext());
         /*
         test();
         try {
@@ -180,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
     }
 
-    private void test() {
+    private void test() throws IOException, JSONException {
         Deck deck = new Deck("Smash","It's a smash game...","Silas",new String[]{"Peach","Bayonetta","Meta Knight"}, new String[]{"Fox","Kirby"},new String[]{"Pikachu"},1,true,0,true);
         deckList.addLiteralDeck(deck);
 

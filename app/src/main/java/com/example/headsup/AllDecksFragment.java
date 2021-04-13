@@ -84,6 +84,7 @@ public class AllDecksFragment extends Fragment {
         Slider timer = (Slider) popupView.findViewById(R.id.startGameTimerSlider);
         float prefFloat = MainActivity.sharedPrefs.getFloat("timer",120.0f);
         timer.setValue(prefFloat);
+        RadioGroup radGroup = (RadioGroup) popupView.findViewById(R.id.startGameDifficultyRadioGroup);
         RadioButton radBut;
         switch(MainActivity.sharedPrefs.getInt("difficulty",2)) {
             case 1:
@@ -102,15 +103,17 @@ public class AllDecksFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 GameActivity gameActivity = new GameActivity();
-                String difficultyStr = radBut.getText().toString();
+                RadioButton selectedRadBut = popupView.findViewById(radGroup.getCheckedRadioButtonId());
+                String difficultyStr = (String) selectedRadBut.getText();
+
                 int difficulty = 0;
                 if(difficultyStr.equals("MEDIUM")) {
                     difficulty = 1;
                 } else if(difficultyStr.equals("HARD")) {
                     difficulty = 2;
                 }
+                System.out.println("Difficulty Selected At Game Start: "+difficulty+" "+difficultyStr);
                 int timerInt = (int) timer.getValue();
-                //gameActivity.setGame(deckList.getDeckAt(deckSelected),timerInt,difficulty);
                 Intent intent = new Intent(getActivity(),gameActivity.getClass());
                 intent.putExtra("deck", deckList.getDeckAt(deckSelected));
                 intent.putExtra("timer",timerInt);
@@ -121,6 +124,14 @@ public class AllDecksFragment extends Fragment {
 
         final PopupWindow popUp = new PopupWindow(popupView,width,height, true);
 
+        TextView closeButton = (TextView) popupView.findViewById(R.id.startGameExitDeckButton);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                popUp.dismiss();
+            }
+        });
 
 
         popUp.showAtLocation(view, Gravity.CENTER,0,0);
