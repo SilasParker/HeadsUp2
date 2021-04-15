@@ -102,7 +102,6 @@ public class AllDecksFragment extends Fragment {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GameActivity gameActivity = new GameActivity();
                 RadioButton selectedRadBut = popupView.findViewById(radGroup.getCheckedRadioButtonId());
                 String difficultyStr = (String) selectedRadBut.getText();
 
@@ -114,7 +113,7 @@ public class AllDecksFragment extends Fragment {
                 }
                 System.out.println("Difficulty Selected At Game Start: "+difficulty+" "+difficultyStr);
                 int timerInt = (int) timer.getValue();
-                Intent intent = new Intent(getActivity(),gameActivity.getClass());
+                Intent intent = new Intent(getActivity(),GameActivity.class);
                 intent.putExtra("deck", deckList.getDeckAt(deckSelected));
                 intent.putExtra("timer",timerInt);
                 intent.putExtra("difficulty",difficulty);

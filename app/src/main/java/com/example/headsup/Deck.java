@@ -37,7 +37,7 @@ public class Deck implements Parcelable {
         this.hardCards.addAll(this.mediumCards);
         this.hardCards.addAll(Arrays.asList(hardCards));
 
-        this.deckSize = this.easyCards.size()+this.mediumCards.size()+this.hardCards.size();
+        this.deckSize = this.hardCards.size();
         this.highScore = highScore;
         this.custom = custom;
         this.iconId = iconId;
@@ -121,6 +121,7 @@ public class Deck implements Parcelable {
     }
 
     public boolean isCustom() {
+        System.out.println("IS CUSTOM");
         return this.custom;
     }
 

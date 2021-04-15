@@ -24,8 +24,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private String currentCard;
     private SensorManager sensorManager;
     private Sensor accSensor;
-    private long timeLastHeldProperly;
-    private boolean initialGameStart, heldIncorrectly, gameInProgress;
+    private long timeLastHeldProperly, timeLastAnswered;
+    private boolean initialGameStart, heldIncorrectly, gameInProgress, testCheck, postAnswer;
 
     //9 < X < 11 || -9 < X < -11 (this sees what side it's on)
     //-5 < Y < 5 //phone is on it's side
@@ -34,6 +34,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("ACTIVITY STARTED: "+this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -48,6 +49,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.initialGameStart = false;
         this.gamePauseTextView = findViewById(R.id.gamePauseText);
         this.gameInProgress = true;
+        this.testCheck = true;
+        this.timeLastAnswered = 0L;
+        this.postAnswer = false;
     }
 
     @Override
@@ -62,8 +66,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void readyToStart() {
-        initialGameStart = true;
-        game.start();
+        System.out.println("ACTIVITY ID: "+this);
+        if(testCheck) {
+            initialGameStart = true;
+            game.start();
+            testCheck = false;
+        }
     }
 
     private void setCurrentCard() {
@@ -83,7 +91,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             float y = event.values[1];
             float z = event.values[2];
 
-            System.out.println(x+" "+y+" "+z);
+
             if(initialGameStart) {
                 this.cardName.setVisibility(View.VISIBLE);
                 cardName.setText(game.getCurrentCard());
@@ -93,13 +101,16 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 this.gamePauseTextView.setVisibility(View.INVISIBLE);
                 gamePauseTextView.setText("Hold phone correctly to continue playing");
                 initialGameStart = false;
+                System.out.println("YYYYYYYYYYYYYYYYYY: "+game.getCurrentCard());
             }
             if(game.hasGameStarted()) {
                 if(game.getCurrentCard() == null) {
                     gameInProgress = false;
+                    System.out.println("FINAL SCORE: "+game.getScore());
                     //finish game (out of cards), move onto score
                 }
                 if(heldProperly(x,y,z)) {
+                    postAnswer = false;
                     if(heldIncorrectly) {
                         this.cardName.setVisibility(View.VISIBLE);
                         this.timerView.setVisibility(View.VISIBLE);
@@ -120,21 +131,30 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-                } else if(turnedToCorrect(x,y,z)) {
+                } else if(turnedToCorrect(x,y,z) && (timeNow-timeLastAnswered >= 1000) && !postAnswer) {
                     System.out.println("TURNED FOR CORRECT");
+                    gamePauseTextView.setText("ANSWER CORRECT");
                     game.addToCorrect(currentCard);
                     game.incrementScore();
                     currentCard = game.getCurrentCard();
                     cardName.setText(currentCard);
-                } else if(turnedToSkip(x,y,z)) {
+                    timeLastAnswered = timeNow;
+                    postAnswer = true;
+                } else if(turnedToSkip(x,y,z) && (timeNow-timeLastAnswered >= 1000) && !postAnswer) {
                     System.out.println("TURNED FOR SKIP, SKIPPING: "+currentCard);
-
+                    gamePauseTextView.setText("ANSWER SKIPPED");
                     game.addToIncorrect(currentCard);
                     currentCard = game.getCurrentCard();
                     System.out.println("CARD IS NOW "+currentCard);
                     cardName.setText(currentCard);
+                    timeLastAnswered = timeNow;
+                    postAnswer = true;
+
+
                 } else {
+                    System.out.println(x+" "+y+" "+z);
                     heldIncorrectly = true;
+                    gamePauseTextView.setText("Hold phone correctly to continue playing");
                     this.cardName.setVisibility(View.INVISIBLE);
                     this.timerView.setVisibility(View.INVISIBLE);
                     this.scoreView.setVisibility(View.INVISIBLE);
@@ -147,7 +167,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                         if(timeNow-timeLastHeldProperly >= 1000) {
                             game.countdown();
                             countdownView.setText(String.valueOf(game.getCountdown()));
-                            if(game.getCountdown() == 0) {
+                            if(game.getCountdown() == 0 && !game.hasGameStarted()) {
                                 readyToStart();
                                 this.heldIncorrectly = false;
                             } else {
@@ -163,7 +183,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private boolean turnedToCorrect(float x, float y, float z) {
-        if(((x > 9 && x < 11) || (x < -9 && x > -11)) && (y > -5 && y < 5) && (z < -7.5)) {
+        if(z < -7.5) {
+            //(x > 5 && x < 7) && (y > -1 && y < 1) && (z < -7.5)
             System.out.println("ANSWER CORRECT");
             return true;
         }
@@ -171,16 +192,19 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private boolean turnedToSkip(float x, float y, float z) {
-        if((x > -1 && x < 1) && (y > -1 && y < 1) && (z > 7.5)) {
+        if(z > 7.5) {
+            //(x > -1 && x < 6) && (y > -1 && y < 1) && (z > 7.5)
             System.out.println("ANSWER SKIPPED");
+
             return true;
         }
         return false;
     }
 
     private boolean heldProperly(float x, float y, float z) {
-        if(((x > 9 && x < 11) || (x < -9 && x > -11)) && (y > -5 && y < 5) && (z > -7.5 && z < 7.5)) {
-            System.out.println("HELD CORRECT");
+        if(z > -7.5 && z < 7.5) {
+            //(x > 4.5 && x < 11) && (y > -5 && y < 5) && (z > -7.5 && z < 7.5)
+            //System.out.println("HELD CORRECT");
             return true;
         }
         System.out.println("HELD INCORRECT");

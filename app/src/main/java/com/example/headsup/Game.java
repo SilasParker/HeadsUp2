@@ -94,12 +94,14 @@ public class Game {
     public void addToCorrect(String answer) {
         correct.add(answer);
         scoreOrder.add(true);
+        System.out.println("MARKED AS CORRECT");
         setNextCard();
     }
 
     public void addToIncorrect(String answer) {
         incorrect.add(answer);
         scoreOrder.add(false);
+        System.out.println("MARKED AS SKIPPED");
         setNextCard();
     }
 

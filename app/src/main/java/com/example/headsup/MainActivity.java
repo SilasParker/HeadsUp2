@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
                         TODO:
-     -why do cards show up with the incorrect name?
+     -make sure there's only ever 1 instance of the GameActivity when a game is started
     */
     public static DeckList deckList;
     public static SharedPreferences sharedPrefs;
