@@ -20,7 +20,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     private Game game;
     private ArrayList<String> deck;
-    private TextView cardName, timerView, scoreView, countdownView, gamePauseTextView;
+    private TextView cardName, timerView, scoreView, countdownView, gamePauseTextView, gameResultActualScore, gameResultHighScore;
     private String currentCard;
     private SensorManager sensorManager;
     private Sensor accSensor;
@@ -37,7 +37,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         System.out.println("ACTIVITY STARTED: "+this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         this.cardName = findViewById(R.id.gameCardName);
         this.timerView = findViewById(R.id.gameTimer);
         this.scoreView = findViewById(R.id.gameScore);
@@ -107,6 +107,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 if(game.getCurrentCard() == null) {
                     gameInProgress = false;
                     System.out.println("FINAL SCORE: "+game.getScore());
+                    setContentView(R.layout.activity_result);
                     //finish game (out of cards), move onto score
                 }
                 if(heldProperly(x,y,z)) {
@@ -180,6 +181,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         }
+    }
+
+    private void generateResultsScreen() {
+
     }
 
     private boolean turnedToCorrect(float x, float y, float z) {

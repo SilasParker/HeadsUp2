@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HeadsUp.NoActionBar">
-        <activity android:name=".GameActivity" android:launchMode="singleInstance"></activity>
+        <activity android:name=".GameActivity" android:screenOrientation="landscape" ></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

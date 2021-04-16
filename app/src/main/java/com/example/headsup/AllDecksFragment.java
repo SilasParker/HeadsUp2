@@ -39,6 +39,7 @@ public class AllDecksFragment extends Fragment {
     private DeckList deckList;
     private float scale;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,10 +59,12 @@ public class AllDecksFragment extends Fragment {
 
     }
 
+
     public void updateGrid() {
         if(this.deckList != null) {
             adapter = new GridAdapter(getContext(),deckList.getAllDecks(),this);
             grid = (GridView) getView().findViewById(R.id.all_decks_grid);
+
             grid.setAdapter(adapter);
         }
     }
@@ -99,9 +102,12 @@ public class AllDecksFragment extends Fragment {
         }
         radBut.toggle();
         Button startBtn = (Button) popupView.findViewById(R.id.startGameStartButton);
+        System.out.println("SET ON CLICK");
         startBtn.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                System.out.println("CLICKED");
                 RadioButton selectedRadBut = popupView.findViewById(radGroup.getCheckedRadioButtonId());
                 String difficultyStr = (String) selectedRadBut.getText();
 
@@ -113,11 +119,13 @@ public class AllDecksFragment extends Fragment {
                 }
                 System.out.println("Difficulty Selected At Game Start: "+difficulty+" "+difficultyStr);
                 int timerInt = (int) timer.getValue();
+                System.out.println("ACTIVITY: "+getActivity());
                 Intent intent = new Intent(getActivity(),GameActivity.class);
                 intent.putExtra("deck", deckList.getDeckAt(deckSelected));
                 intent.putExtra("timer",timerInt);
                 intent.putExtra("difficulty",difficulty);
                 startActivity(intent);
+                System.out.println("started");
             }
         });
 
