@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
-    private int score, timer, difficulty, countdown;
+    private int score, timer, difficulty, countdown, maxTimer;
     private Deck deck;
     private ArrayList<String> correct, incorrect, deckUsed;
     private ArrayList<Boolean> scoreOrder;
@@ -24,11 +24,46 @@ public class Game {
         this.paused = true;
         this.gameStarted = false;
         this.countdown = 3;
+        this.maxTimer = timer;
+    }
+
+    public String getDifficultyAsString() {
+        if(this.difficulty == 0) {
+            return "Easy";
+        } else if(this.difficulty == 1) {
+            return "Medium";
+        } else {
+            return "Hard";
+        }
+    }
+
+    public int getDifficulty() {
+        return this.difficulty;
+    }
+
+    public int getMaxTimer() {
+        return this.maxTimer;
+    }
+
+    public Deck getDeck() {
+        return this.deck;
+    }
+
+    public ArrayList<String> getCorrectStringArray() {
+        return this.correct;
+    }
+
+    public ArrayList<String> getIncorrectStringArray() {
+        return this.incorrect;
     }
 
     public void start() {
         this.gameStarted = true;
         setNextCard();
+    }
+
+    public ArrayList<Boolean> getScoreOrder() {
+        return this.scoreOrder;
     }
 
     private void setNextCard() {

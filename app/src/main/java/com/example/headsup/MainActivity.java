@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
                         TODO:
-     -make sure there's only ever 1 instance of the GameActivity when a game is started
+     -developer.android.com/guide/topics/search/search-dialogue
     */
     public static DeckList deckList;
     public static SharedPreferences sharedPrefs;

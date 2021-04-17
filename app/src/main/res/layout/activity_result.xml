@@ -54,12 +54,13 @@
         android:id="@+id/gameResultHighScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text=""
+        android:textSize="20sp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameResultActualScore"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/gameResultActualScore" />
 
     <Button
         android:id="@+id/gameResultBackButton"
@@ -107,6 +108,7 @@
         app:layout_constraintTop_toBottomOf="@+id/gameResultCorrectText">
 
         <LinearLayout
+            android:id="@+id/gameResultCorrectLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
@@ -133,6 +135,7 @@
         app:layout_constraintTop_toBottomOf="@+id/gameResultSkippedText">
 
         <LinearLayout
+            android:id="@+id/gameResultIncorrectLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />

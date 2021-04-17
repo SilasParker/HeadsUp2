@@ -253,4 +253,8 @@ public class Deck implements Parcelable {
         dest.writeByte((byte) (custom ? 1 : 0));
         dest.writeByte((byte) (favourite ? 1 : 0));
     }
+
+    public void setHighScore(int newHighScore) {
+        this.highScore = newHighScore;
+    }
 }

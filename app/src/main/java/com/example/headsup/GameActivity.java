@@ -3,6 +3,7 @@ package com.example.headsup;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,22 +11,28 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity implements SensorEventListener {
 
     private Game game;
     private ArrayList<String> deck;
-    private TextView cardName, timerView, scoreView, countdownView, gamePauseTextView, gameResultActualScore, gameResultHighScore;
+    private TextView cardName, timerView, scoreView, countdownView, gamePauseTextView, gameResultActualScore, gameResultHighScore, gameResultDifficulty;
     private String currentCard;
     private SensorManager sensorManager;
     private Sensor accSensor;
     private long timeLastHeldProperly, timeLastAnswered;
     private boolean initialGameStart, heldIncorrectly, gameInProgress, testCheck, postAnswer;
+    private LinearLayout correctLinearLayout, incorrectLinearLayout;
+    private Button gameResultBackBtn, gameResultReplayBtn;
 
     //9 < X < 11 || -9 < X < -11 (this sees what side it's on)
     //-5 < Y < 5 //phone is on it's side
@@ -52,6 +59,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.testCheck = true;
         this.timeLastAnswered = 0L;
         this.postAnswer = false;
+        this.correctLinearLayout = findViewById(R.id.gameResultCorrectLinearLayout);
+        this.incorrectLinearLayout = findViewById(R.id.gameResultIncorrectLinearLayout);
+        this.gameResultDifficulty = findViewById(R.id.gameResultDifficulty);
+        this.gameResultBackBtn = findViewById(R.id.gameResultBackButton);
+        this.gameResultReplayBtn = findViewById(R.id.gameResultReplayButton);
+
     }
 
     @Override
@@ -183,7 +196,49 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    private void generateResultsScreen() {
+    private void generateResultsScreen() throws InterruptedException, IOException, JSONException {
+        this.gameResultHighScore.setVisibility(View.INVISIBLE);
+        this.gameResultBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        this.gameResultReplayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),GameActivity.class);
+                intent.putExtra("deck", game.getDeck());
+                intent.putExtra("timer",game.getMaxTimer());
+                intent.putExtra("difficulty",game.getDifficulty());
+                startActivity(intent);
+                finish();
+            }
+        });
+        int tempScore = 0;
+        ArrayList<String> correctStrings = game.getCorrectStringArray();
+        ArrayList<String> incorrectStrings = game.getIncorrectStringArray();
+        this.gameResultDifficulty.setText("Difficulty: "+game.getDifficultyAsString());
+        for(boolean win : game.getScoreOrder()) {
+            TextView textView = new TextView(this);
+            if(win) {
+                tempScore++;
+                this.gameResultActualScore.setText(tempScore);
+                textView.setText(correctStrings.remove(0));
+                correctLinearLayout.addView(textView);
+
+            } else {
+                textView.setText(incorrectStrings.remove(0));
+                incorrectLinearLayout.addView(textView);
+            }
+            Thread.sleep(500);
+        }
+        if(game.getScore() > game.getDeck().getHighScore()) {
+            gameResultActualScore.setVisibility(View.VISIBLE);
+            game.getDeck().setHighScore(game.getScore());
+            game.getDeck().saveJsonToFile(this);
+        }
+
 
     }
 
