@@ -102,6 +102,9 @@ public class AllDecksFragment extends Fragment {
         }
         radBut.toggle();
         Button startBtn = (Button) popupView.findViewById(R.id.startGameStartButton);
+
+        final PopupWindow popUp = new PopupWindow(popupView,width,height, true);
+
         System.out.println("SET ON CLICK");
         startBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -125,11 +128,12 @@ public class AllDecksFragment extends Fragment {
                 intent.putExtra("timer",timerInt);
                 intent.putExtra("difficulty",difficulty);
                 startActivity(intent);
+                popUp.dismiss();
                 System.out.println("started");
             }
         });
 
-        final PopupWindow popUp = new PopupWindow(popupView,width,height, true);
+
 
         TextView closeButton = (TextView) popupView.findViewById(R.id.startGameExitDeckButton);
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -139,8 +143,6 @@ public class AllDecksFragment extends Fragment {
                 popUp.dismiss();
             }
         });
-
-
         popUp.showAtLocation(view, Gravity.CENTER,0,0);
 
     }

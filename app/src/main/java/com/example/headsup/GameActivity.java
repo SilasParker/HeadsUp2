@@ -10,6 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -33,6 +34,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean initialGameStart, heldIncorrectly, gameInProgress, testCheck, postAnswer;
     private LinearLayout correctLinearLayout, incorrectLinearLayout;
     private Button gameResultBackBtn, gameResultReplayBtn;
+
+    private int testTempScore;
+    private ArrayList<String> correctList, skipList;
 
     //9 < X < 11 || -9 < X < -11 (this sees what side it's on)
     //-5 < Y < 5 //phone is on it's side
@@ -59,11 +63,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.testCheck = true;
         this.timeLastAnswered = 0L;
         this.postAnswer = false;
-        this.correctLinearLayout = findViewById(R.id.gameResultCorrectLinearLayout);
-        this.incorrectLinearLayout = findViewById(R.id.gameResultIncorrectLinearLayout);
-        this.gameResultDifficulty = findViewById(R.id.gameResultDifficulty);
-        this.gameResultBackBtn = findViewById(R.id.gameResultBackButton);
-        this.gameResultReplayBtn = findViewById(R.id.gameResultReplayButton);
+
+        this.testTempScore = 0;
 
     }
 
@@ -108,6 +109,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             if(initialGameStart) {
                 this.cardName.setVisibility(View.VISIBLE);
                 cardName.setText(game.getCurrentCard());
+                this.currentCard = game.getCurrentCard();
                 this.timerView.setVisibility(View.VISIBLE);
                 this.scoreView.setVisibility(View.VISIBLE);
                 this.countdownView.setVisibility(View.GONE);
@@ -121,6 +123,16 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     gameInProgress = false;
                     System.out.println("FINAL SCORE: "+game.getScore());
                     setContentView(R.layout.activity_result);
+
+                    try {
+                        generateResultsScreen();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     //finish game (out of cards), move onto score
                 }
                 if(heldProperly(x,y,z)) {
@@ -137,6 +149,16 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                         this.timerView.setText(String.valueOf(game.getTimer()));
                         if(game.getTimer() < 0) {
                             gameInProgress = false;
+                            setContentView(R.layout.activity_result);
+                            try {
+                                generateResultsScreen();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             //finish game, move on to score
                         } else {
                             timeLastHeldProperly = timeNow;
@@ -196,7 +218,24 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    private boolean resultsScreenVisible() {
+        if(this.gameResultBackBtn.getVisibility() == View.VISIBLE) {
+            return true;
+        }
+        return false;
+    }
+
+
+
     private void generateResultsScreen() throws InterruptedException, IOException, JSONException {
+        this.gameResultBackBtn = findViewById(R.id.gameResultBackButton);
+        this.correctLinearLayout = findViewById(R.id.gameResultCorrectLinearLayout);
+        this.incorrectLinearLayout = findViewById(R.id.gameResultIncorrectLinearLayout);
+        this.gameResultDifficulty = findViewById(R.id.gameResultDifficulty);
+
+        this.gameResultReplayBtn = findViewById(R.id.gameResultReplayButton);
+        this.gameResultHighScore = findViewById(R.id.gameResultHighScore);
+        this.gameResultActualScore = findViewById(R.id.gameResultActualScore);
         this.gameResultHighScore.setVisibility(View.INVISIBLE);
         this.gameResultBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,6 +247,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),GameActivity.class);
+                System.out.println(game.getDeck());
                 intent.putExtra("deck", game.getDeck());
                 intent.putExtra("timer",game.getMaxTimer());
                 intent.putExtra("difficulty",game.getDifficulty());
@@ -215,23 +255,20 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 finish();
             }
         });
-        int tempScore = 0;
-        ArrayList<String> correctStrings = game.getCorrectStringArray();
-        ArrayList<String> incorrectStrings = game.getIncorrectStringArray();
-        this.gameResultDifficulty.setText("Difficulty: "+game.getDifficultyAsString());
-        for(boolean win : game.getScoreOrder()) {
-            TextView textView = new TextView(this);
-            if(win) {
-                tempScore++;
-                this.gameResultActualScore.setText(tempScore);
-                textView.setText(correctStrings.remove(0));
-                correctLinearLayout.addView(textView);
 
-            } else {
-                textView.setText(incorrectStrings.remove(0));
-                incorrectLinearLayout.addView(textView);
-            }
-            Thread.sleep(500);
+        this.correctList = game.getCorrectStringArray();
+        this.skipList = game.getIncorrectStringArray();
+        System.out.println("CORRECT: "+correctList.toString());
+        System.out.println("SKIPPED: "+skipList.toString());
+        int counter = 0;
+        this.gameResultDifficulty.setText("Difficulty: " + game.getDifficultyAsString());
+        for(boolean win : game.getScoreOrder()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    incrementCorrectSkippedLists(win);
+                }
+            },counter += 1000);
         }
         if(game.getScore() > game.getDeck().getHighScore()) {
             gameResultActualScore.setVisibility(View.VISIBLE);
@@ -240,6 +277,24 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         }
 
 
+    }
+
+    private void incrementCorrectSkippedLists(boolean win) {
+        TextView textView = new TextView(this);
+        if(win) {
+            testTempScore++;
+            this.gameResultActualScore.setText(String.valueOf(testTempScore));
+            System.out.println("CORRECT "+correctList.get(0)+" SCORE: "+testTempScore);
+            textView.setText(correctList.remove(0));
+            correctLinearLayout.addView(textView);
+
+
+        } else {
+            System.out.println("SKIPPED "+skipList.get(0)+" SCORE: "+testTempScore);
+            textView.setText(skipList.remove(0));
+
+            incorrectLinearLayout.addView(textView);
+        }
     }
 
     private boolean turnedToCorrect(float x, float y, float z) {

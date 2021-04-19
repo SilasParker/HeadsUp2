@@ -113,11 +113,16 @@ public class Deck implements Parcelable {
     public ArrayList<String> getDeckByDifficulty(int difficulty) {
         ArrayList<String> deckToReturn = new ArrayList<>();
         switch(difficulty) {
-            case 0: return this.easyCards;
-            case 1: return this.mediumCards;
-            case 2: return this.hardCards;
-            default: return null;
+            case 0: deckToReturn.addAll(this.easyCards);
+            break;
+            case 1: deckToReturn.addAll(this.mediumCards);
+            break;
+            case 2: deckToReturn.addAll(this.hardCards);
+            break;
+            default:
+            break;
         }
+        return deckToReturn;
     }
 
     public boolean isCustom() {
