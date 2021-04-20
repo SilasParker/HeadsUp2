@@ -18,6 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,14 +38,17 @@ public class AllDecksFragment extends Fragment {
     private GridView grid;
     private GridAdapter adapter;
     private DeckList deckList;
+    private SearchView searchView;
     private float scale;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        System.out.println("WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: 1");
+
         scale = getContext().getResources().getDisplayMetrics().density;
+
+
 
         return inflater.inflate(R.layout.fragment_all_decks,container,false);
 
@@ -52,18 +56,21 @@ public class AllDecksFragment extends Fragment {
     }
 
     public void setAllDecks(DeckList deckList) {
-        System.out.println("WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: 2");
         this.deckList = deckList;
-        System.out.println(deckList);
 
 
+    }
+
+    public void displaySearchResults(ArrayList<Deck> tempDeckList) {
+        GridAdapter tempAdapter = new GridAdapter(getContext(),tempDeckList,this);
+        this.grid.setAdapter(tempAdapter);
     }
 
 
     public void updateGrid() {
         if(this.deckList != null) {
             adapter = new GridAdapter(getContext(),deckList.getAllDecks(),this);
-            grid = (GridView) getView().findViewById(R.id.all_decks_grid);
+            grid = (GridView) getView().findViewById(R.id.allDecksGrid);
 
             grid.setAdapter(adapter);
         }
@@ -71,7 +78,10 @@ public class AllDecksFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
         updateGrid();
+        this.searchView = getActivity().findViewById(R.id.allDecksSearch);
+        searchView.setOnQueryTextListener(new DeckSearchOnQueryTextListener(deckList,this));
     }
 
     public void onDeckSelectedToPlay(int deckSelected) {
@@ -105,12 +115,10 @@ public class AllDecksFragment extends Fragment {
 
         final PopupWindow popUp = new PopupWindow(popupView,width,height, true);
 
-        System.out.println("SET ON CLICK");
         startBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                System.out.println("CLICKED");
                 RadioButton selectedRadBut = popupView.findViewById(radGroup.getCheckedRadioButtonId());
                 String difficultyStr = (String) selectedRadBut.getText();
 
@@ -120,16 +128,13 @@ public class AllDecksFragment extends Fragment {
                 } else if(difficultyStr.equals("HARD")) {
                     difficulty = 2;
                 }
-                System.out.println("Difficulty Selected At Game Start: "+difficulty+" "+difficultyStr);
                 int timerInt = (int) timer.getValue();
-                System.out.println("ACTIVITY: "+getActivity());
                 Intent intent = new Intent(getActivity(),GameActivity.class);
                 intent.putExtra("deck", deckList.getDeckAt(deckSelected));
                 intent.putExtra("timer",timerInt);
                 intent.putExtra("difficulty",difficulty);
                 startActivity(intent);
                 popUp.dismiss();
-                System.out.println("started");
             }
         });
 
@@ -146,6 +151,8 @@ public class AllDecksFragment extends Fragment {
         popUp.showAtLocation(view, Gravity.CENTER,0,0);
 
     }
+
+
 
 
 }

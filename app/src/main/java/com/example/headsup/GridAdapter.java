@@ -45,7 +45,6 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        System.out.println("GOT GRID VIEW (SHOULD ONLY HAPPEN ONCE) "+this);
         if(inflater == null) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }

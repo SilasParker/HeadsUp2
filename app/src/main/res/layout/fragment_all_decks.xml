@@ -7,17 +7,17 @@
     android:background="@android:color/holo_blue_light">
 
     <SearchView
-        android:id="@+id/all_decks_search"
+        android:id="@+id/allDecksSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/all_decks_grid" />
+        app:layout_constraintBottom_toTopOf="@+id/allDecksGrid" />
 
 
     <GridView
-        android:id="@+id/all_decks_grid"
+        android:id="@+id/allDecksGrid"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_gravity="center"
@@ -25,7 +25,7 @@
         android:numColumns="2"
         android:scrollbars="vertical"
 
-        app:layout_constraintTop_toBottomOf="@id/all_decks_search"
+        app:layout_constraintTop_toBottomOf="@id/allDecksSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 

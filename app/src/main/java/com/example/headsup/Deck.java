@@ -73,8 +73,6 @@ public class Deck implements Parcelable {
     public void toggleFavourite(Context context) throws IOException, JSONException {
         this.favourite = !this.favourite;
         saveJsonToFile(context);
-        System.out.println("Favourite toggled");
-        System.out.println(easyCards+"\n"+mediumCards+"\n"+hardCards);
     }
 
     public String toString() {
@@ -126,7 +124,6 @@ public class Deck implements Parcelable {
     }
 
     public boolean isCustom() {
-        System.out.println("IS CUSTOM");
         return this.custom;
     }
 

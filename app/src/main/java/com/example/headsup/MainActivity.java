@@ -74,6 +74,49 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static ArrayList<Deck> searchDeck(String search, DeckList deckListToSearch) {
+        search = search.toLowerCase();
+        ArrayList<Deck> decksSearched = new ArrayList<>();
+        ArrayList<Deck> tempDecksSearched = new ArrayList<>();
+
+        if(deckListToSearch != null) {
+            decksSearched.addAll(deckListToSearch.getAllDecks());
+            tempDecksSearched.addAll(decksSearched);
+            boolean noMatchesFirstChar = true;
+            if (search.length() == 0) {
+                System.out.println("No Length to Search, Returning All");
+                return decksSearched;
+            }
+            for (int i = 0; i < search.length(); i++) {
+                System.out.println("Searching character #" + i);
+                char searchedChar = search.charAt(i);
+                System.out.println(decksSearched.size() + " decks left");
+                System.out.println(tempDecksSearched.size() + " temp decks left");
+                for (Deck deck : decksSearched) {
+                    if (deck.getName().toLowerCase().charAt(i) != searchedChar) {
+                        System.out.println("Removing " + deck.getName() + " as " + deck.getName().toLowerCase().charAt(i) + " != " + searchedChar);
+                        tempDecksSearched.remove(deck);
+                    }
+                }
+
+                if (tempDecksSearched.size() == 0 && !noMatchesFirstChar) {
+                    System.out.println("No matches left, returning what was left of last round");
+                    return decksSearched;
+                } else if (tempDecksSearched.size() == 0 && noMatchesFirstChar) {
+                    System.out.println("No matches on first character, returning all");
+                    return tempDecksSearched;
+                } else {
+                    System.out.println("Ready to continue searching");
+                    decksSearched = tempDecksSearched;
+                }
+            }
+            return decksSearched;
+
+        }
+        System.out.println("Somehow got here, returning all");
+        return new ArrayList<Deck>();
+    }
+
     
 
 
