@@ -24,6 +24,7 @@ public class DeckList {
         this.decks = deckArray;
     }
 
+
     public String toString() {
         String toReturn = "";
         for(Deck deck : decks) {
@@ -49,8 +50,9 @@ public class DeckList {
     }
 
     public void remove(int position) {
-        decks.remove(position);
         decks.get(position).removeJsonFromDir(context);
+        decks.remove(position);
+
     }
 
     public void toggleDeckFavourite(int position, Context context) throws IOException, JSONException {

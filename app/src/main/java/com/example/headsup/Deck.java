@@ -169,7 +169,11 @@ public class Deck implements Parcelable {
             bufferedWriter.write(deckString);
             bufferedWriter.close();
         } else {
-            Toast.makeText(context,"File exists",Toast.LENGTH_LONG).show();
+            System.out.println(file.toString());
+            FileWriter fw = new FileWriter(file,false);
+            BufferedWriter bufferedWriter = new BufferedWriter(fw);
+            bufferedWriter.write(deckString);
+            bufferedWriter.close();
         }
     }
 

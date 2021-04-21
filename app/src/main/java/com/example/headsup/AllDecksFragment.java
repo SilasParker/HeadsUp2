@@ -57,13 +57,15 @@ public class AllDecksFragment extends Fragment {
 
     public void setAllDecks(DeckList deckList) {
         this.deckList = deckList;
-
+        System.out.println("Deck List Size: "+deckList.getAllDecks().size());
 
     }
 
     public void displaySearchResults(ArrayList<Deck> tempDeckList) {
         GridAdapter tempAdapter = new GridAdapter(getContext(),tempDeckList,this);
-        this.grid.setAdapter(tempAdapter);
+        if(this.grid != null) {
+            this.grid.setAdapter(tempAdapter);
+        }
     }
 
 

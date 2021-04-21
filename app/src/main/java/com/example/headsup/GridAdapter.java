@@ -1,6 +1,8 @@
 package com.example.headsup;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +85,7 @@ public class GridAdapter extends BaseAdapter {
                 }
             }
         });
+        System.out.println("HIGHSCORE: "+decks.get(position).getHighScore());
         TextView highScoreView = convertView.findViewById(R.id.highscore);
         highScoreView.setText(String.valueOf(decks.get(position).getHighScore()));
 
@@ -90,13 +93,31 @@ public class GridAdapter extends BaseAdapter {
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder alertDiaBuilder = new AlertDialog.Builder(v.getContext());
+                alertDiaBuilder
+                        .setTitle("WARNING")
+                        .setCancelable(true)
+                        .setMessage("Are you sure you want to delete this deck? Cannot be undone")
+                        .setIcon(R.drawable.ic_baseline_warning_amber_24)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                removeDeck(position);
 
-                removeDeck(position);
+                                if(parentFragment instanceof AllDecksFragment) {
+                                    AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
+                                    allDecksFragment.updateGrid();
+                                }
+                            }
+                        }).show();
+                /*
+                alertDiaBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).show();*/
 
-                if(parentFragment instanceof AllDecksFragment) {
-                    AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
-                    allDecksFragment.updateGrid();
-                }
             }
         });
 

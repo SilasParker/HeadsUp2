@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
                         TODO:
-     -developer.android.com/guide/topics/search/search-dialogue
+     -see if there's anything left to do or branch for favourites
     */
     public static DeckList deckList;
     public static SharedPreferences sharedPrefs;
@@ -52,16 +52,18 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new AllDecksFragment()).commit();
         deckList = new DeckList(getApplicationContext());
-        /*
-        test();
+
+
+/*
         try {
+            test();
             deckList.getDeckAt(0).saveJsonToFile(this);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
-
+        }
+*/
         try {
             this.deckList.setAllDecks(getAllStoredDecks());
         } catch (IOException e) {
@@ -93,7 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(decksSearched.size() + " decks left");
                 System.out.println(tempDecksSearched.size() + " temp decks left");
                 for (Deck deck : decksSearched) {
-                    if (deck.getName().toLowerCase().charAt(i) != searchedChar) {
+                    System.out.println(deck.getName().length()+" "+i);
+                    if(deck.getName().length() == i) {
+                        tempDecksSearched.remove(deck);
+                    } else if (deck.getName().toLowerCase().charAt(i) != searchedChar) {
                         System.out.println("Removing " + deck.getName() + " as " + deck.getName().toLowerCase().charAt(i) + " != " + searchedChar);
                         tempDecksSearched.remove(deck);
                     }
@@ -228,7 +233,8 @@ public class MainActivity extends AppCompatActivity {
     private void test() throws IOException, JSONException {
         Deck deck = new Deck("Smash","It's a smash game...","Silas",new String[]{"Peach","Bayonetta","Meta Knight"}, new String[]{"Fox","Kirby"},new String[]{"Pikachu"},1,true,0,true);
         deckList.addLiteralDeck(deck);
-
+        Deck deck2 = new Deck("Harry Potter","Abra kadabra","Alex",new String[]{"Harry Potter","Ronald Weasley","Hermione Granger"},new String[]{"Luna Lovegood","Neville Longbottom"},new String[]{"Albus Dumbledore"},2,false,0,false);
+        deckList.addLiteralDeck(deck2);
     }
 
 
