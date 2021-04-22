@@ -47,6 +47,7 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        System.out.println(decks.get(position).toString());
         if(inflater == null) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -81,7 +82,7 @@ public class GridAdapter extends BaseAdapter {
                 }
                 if(parentFragment instanceof AllDecksFragment) {
                     AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
-                    allDecksFragment.updateGrid();
+                    allDecksFragment.updateGrid(R.id.allDecksGrid);
                 }
             }
         });
@@ -105,17 +106,10 @@ public class GridAdapter extends BaseAdapter {
 
                                 if(parentFragment instanceof AllDecksFragment) {
                                     AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
-                                    allDecksFragment.updateGrid();
+                                    allDecksFragment.updateGrid(R.id.allDecksGrid);
                                 }
                             }
                         }).show();
-                /*
-                alertDiaBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                }).show();*/
 
             }
         });

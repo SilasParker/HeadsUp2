@@ -33,9 +33,9 @@ public class Deck implements Parcelable {
         this.author = author;
         this.easyCards.addAll(Arrays.asList(easyCards));
 
-        this.mediumCards.addAll(this.easyCards);
+        //this.mediumCards.addAll(this.easyCards);
         this.mediumCards.addAll(Arrays.asList(mediumCards));
-        this.hardCards.addAll(this.mediumCards);
+        //this.hardCards.addAll(this.mediumCards);
         this.hardCards.addAll(Arrays.asList(hardCards));
 
         this.deckSize = this.hardCards.size();
@@ -119,9 +119,14 @@ public class Deck implements Parcelable {
         switch(difficulty) {
             case 0: deckToReturn.addAll(this.easyCards);
             break;
-            case 1: deckToReturn.addAll(this.mediumCards);
+            case 1:
+                deckToReturn.addAll(this.easyCards);
+                deckToReturn.addAll(this.mediumCards);
             break;
-            case 2: deckToReturn.addAll(this.hardCards);
+            case 2:
+                deckToReturn.addAll(this.easyCards);
+                deckToReturn.addAll(this.mediumCards);
+                deckToReturn.addAll(this.hardCards);
             break;
             default:
             break;

@@ -5,6 +5,7 @@ import android.content.Context;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DeckList {
@@ -18,6 +19,16 @@ public class DeckList {
 
     public ArrayList<Deck> getAllDecks() {
         return this.decks;
+    }
+
+    public ArrayList<Deck> getAllFavouriteDecks() {
+        ArrayList<Deck> deckArrToReturn = new ArrayList<>();
+        for(Deck deck : this.decks) {
+            if(deck.isFavourite()) {
+                deckArrToReturn.add(deck);
+            }
+        }
+        return deckArrToReturn;
     }
 
     public void setAllDecks(ArrayList<Deck> deckArray) {

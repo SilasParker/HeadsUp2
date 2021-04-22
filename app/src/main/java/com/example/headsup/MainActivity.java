@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
 /*
         try {
             test();
-            deckList.getDeckAt(0).saveJsonToFile(this,false);
-            deckList.getDeckAt(1).saveJsonToFile(this,false);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
