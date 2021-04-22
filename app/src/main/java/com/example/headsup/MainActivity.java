@@ -54,16 +54,7 @@ public class MainActivity extends AppCompatActivity {
         deckList = new DeckList(getApplicationContext());
 
 
-/*
-        try {
-            test();
-            deckList.getDeckAt(0).saveJsonToFile(this);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
+
         try {
             this.deckList.setAllDecks(getAllStoredDecks());
         } catch (IOException e) {
@@ -72,6 +63,17 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
 
         }
+/*
+        try {
+            test();
+            deckList.getDeckAt(0).saveJsonToFile(this,false);
+            deckList.getDeckAt(1).saveJsonToFile(this,false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+*/
 
 
     }
@@ -86,39 +88,29 @@ public class MainActivity extends AppCompatActivity {
             tempDecksSearched.addAll(decksSearched);
             boolean noMatchesFirstChar = true;
             if (search.length() == 0) {
-                System.out.println("No Length to Search, Returning All");
                 return decksSearched;
             }
             for (int i = 0; i < search.length(); i++) {
-                System.out.println("Searching character #" + i);
                 char searchedChar = search.charAt(i);
-                System.out.println(decksSearched.size() + " decks left");
-                System.out.println(tempDecksSearched.size() + " temp decks left");
                 for (Deck deck : decksSearched) {
-                    System.out.println(deck.getName().length()+" "+i);
                     if(deck.getName().length() == i) {
                         tempDecksSearched.remove(deck);
                     } else if (deck.getName().toLowerCase().charAt(i) != searchedChar) {
-                        System.out.println("Removing " + deck.getName() + " as " + deck.getName().toLowerCase().charAt(i) + " != " + searchedChar);
                         tempDecksSearched.remove(deck);
                     }
                 }
 
                 if (tempDecksSearched.size() == 0 && !noMatchesFirstChar) {
-                    System.out.println("No matches left, returning what was left of last round");
                     return decksSearched;
                 } else if (tempDecksSearched.size() == 0 && noMatchesFirstChar) {
-                    System.out.println("No matches on first character, returning all");
                     return tempDecksSearched;
                 } else {
-                    System.out.println("Ready to continue searching");
                     decksSearched = tempDecksSearched;
                 }
             }
             return decksSearched;
 
         }
-        System.out.println("Somehow got here, returning all");
         return new ArrayList<Deck>();
     }
 
@@ -233,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
     private void test() throws IOException, JSONException {
         Deck deck = new Deck("Smash","It's a smash game...","Silas",new String[]{"Peach","Bayonetta","Meta Knight"}, new String[]{"Fox","Kirby"},new String[]{"Pikachu"},1,true,0,true);
         deckList.addLiteralDeck(deck);
-        Deck deck2 = new Deck("Harry Potter","Abra kadabra","Alex",new String[]{"Harry Potter","Ronald Weasley","Hermione Granger"},new String[]{"Luna Lovegood","Neville Longbottom"},new String[]{"Albus Dumbledore"},2,false,0,false);
+        Deck deck2 = new Deck("Harry Potter","Abra kadabra","Alex",new String[]{"Harry Potter","Ronald Weasley","Hermione Granger"},new String[]{"Luna Lovegood","Neville Longbottom"},new String[]{"Albus Dumbledore"},2,true,0,false);
         deckList.addLiteralDeck(deck2);
     }
 

@@ -57,7 +57,6 @@ public class AllDecksFragment extends Fragment {
 
     public void setAllDecks(DeckList deckList) {
         this.deckList = deckList;
-        System.out.println("Deck List Size: "+deckList.getAllDecks().size());
 
     }
 

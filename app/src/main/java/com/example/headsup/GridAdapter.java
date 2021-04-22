@@ -85,7 +85,6 @@ public class GridAdapter extends BaseAdapter {
                 }
             }
         });
-        System.out.println("HIGHSCORE: "+decks.get(position).getHighScore());
         TextView highScoreView = convertView.findViewById(R.id.highscore);
         highScoreView.setText(String.valueOf(decks.get(position).getHighScore()));
 

@@ -32,6 +32,7 @@ public class Deck implements Parcelable {
         this.description = description;
         this.author = author;
         this.easyCards.addAll(Arrays.asList(easyCards));
+
         this.mediumCards.addAll(this.easyCards);
         this.mediumCards.addAll(Arrays.asList(mediumCards));
         this.hardCards.addAll(this.mediumCards);
@@ -72,7 +73,7 @@ public class Deck implements Parcelable {
 
     public void toggleFavourite(Context context) throws IOException, JSONException {
         this.favourite = !this.favourite;
-        saveJsonToFile(context);
+        saveJsonToFile(context,true);
     }
 
     public String toString() {
@@ -85,6 +86,11 @@ public class Deck implements Parcelable {
                 toReturn += card + ", ";
             }
             toReturn += "\n";
+            if(i == 0) {
+                toReturn += "Medium: ";
+            } else if(i == 1) {
+                toReturn += "Hard: ";
+            }
         }
         toReturn += "Author: "+this.author+"\n";
         toReturn += "Favourite: "+this.favourite+"\n";
@@ -158,7 +164,7 @@ public class Deck implements Parcelable {
         return deckJSON;
     }
 
-    public void saveJsonToFile(Context context) throws JSONException, IOException {
+    public void saveJsonToFile(Context context, boolean overwrite) throws JSONException, IOException {
         JSONObject deck = this.getAsJson();
         String deckString = deck.toString();
         String deckFileName = this.getDirectorySafeName()+".json";
@@ -168,8 +174,7 @@ public class Deck implements Parcelable {
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(deckString);
             bufferedWriter.close();
-        } else {
-            System.out.println(file.toString());
+        } else if(overwrite) {
             FileWriter fw = new FileWriter(file,false);
             BufferedWriter bufferedWriter = new BufferedWriter(fw);
             bufferedWriter.write(deckString);

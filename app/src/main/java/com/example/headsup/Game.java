@@ -20,7 +20,6 @@ public class Game {
         this.difficulty = difficulty;
         this.scoreOrder = new ArrayList<>();
         this.deckUsed = getUsedDeck();
-        System.out.println("DECK USED: "+getUsedDeck());
         this.paused = true;
         this.gameStarted = false;
         this.countdown = 3;
@@ -69,12 +68,9 @@ public class Game {
     private void setNextCard() {
         if(deckUsed.size() > 0) {
             Random r = new Random();
-            System.out.println("DECK DIFFICULTY: " + this.difficulty);
-            System.out.println("DECK USED SIZE IS: " + deckUsed.size());
             int randomNum = r.nextInt(deckUsed.size());
 
             currentCard = deckUsed.get(randomNum);
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX REMOVING: "+deckUsed.get(randomNum));
             deckUsed.remove(randomNum);
         } else {
             currentCard = null;
@@ -129,14 +125,12 @@ public class Game {
     public void addToCorrect(String answer) {
         correct.add(answer);
         scoreOrder.add(true);
-        System.out.println("MARKED AS CORRECT");
         setNextCard();
     }
 
     public void addToIncorrect(String answer) {
         incorrect.add(answer);
         scoreOrder.add(false);
-        System.out.println("MARKED AS SKIPPED");
         setNextCard();
     }
 

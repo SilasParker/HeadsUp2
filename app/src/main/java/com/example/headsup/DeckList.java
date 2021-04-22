@@ -37,12 +37,12 @@ public class DeckList {
     public void addDeck(String name, String description, String author, String[] easyCards, String[] mediumCards, String[] hardCards, int iconId, boolean custom, int highScore, boolean favourite) throws IOException, JSONException {
         Deck newDeck = new Deck(name, description, author, easyCards, mediumCards, hardCards, iconId, custom, highScore, favourite);
         this.decks.add(newDeck);
-        newDeck.saveJsonToFile(context);
+        newDeck.saveJsonToFile(context,false);
     }
 
     public void addLiteralDeck(Deck deck) throws IOException, JSONException {
         this.decks.add(deck);
-        deck.saveJsonToFile(context);
+        deck.saveJsonToFile(context,false);
     }
 
     public Deck getDeckAt(int position) {
