@@ -31,6 +31,12 @@ public class DeckList {
         return deckArrToReturn;
     }
 
+    public DeckList getAllFavouritesAsDeckList() {
+        DeckList deckListToReturn = new DeckList(context);
+        deckListToReturn.setAllDecks(getAllFavouriteDecks());
+        return deckListToReturn;
+    }
+
     public void setAllDecks(ArrayList<Deck> deckArray) {
         this.decks = deckArray;
     }
@@ -66,7 +72,23 @@ public class DeckList {
 
     }
 
-    public void toggleDeckFavourite(int position, Context context) throws IOException, JSONException {
-        decks.get(position).toggleFavourite(context);
+    public void toggleDeckFavourite(int position, Context context, boolean favouriteFragment) throws IOException, JSONException {
+        if(!favouriteFragment) {
+            decks.get(position).toggleFavourite(context);
+        } else {
+            int favPosition = -1;
+            while(position >= 0) {
+                favPosition++;
+                if(getDeckAt(favPosition).isFavourite()) {
+                    position--;
+                }
+            }
+            decks.get(favPosition).toggleFavourite(context);
+        }
     }
+
+
+
 }
+
+

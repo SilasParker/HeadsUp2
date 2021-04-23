@@ -18,10 +18,7 @@ import java.util.ArrayList;
 
 public class FavouritesFragment extends DeckLayoutFragment {
 
-    private GridView grid;
-    private GridAdapter adapter;
-    private DeckList deckList;
-    private SearchView searchView;
+
 
 
     @Nullable
@@ -31,10 +28,19 @@ public class FavouritesFragment extends DeckLayoutFragment {
     }
 
     @Override
+    public void updateGrid(int gridId) {
+        if(this.getDeckList() != null) {
+            this.setGridAdapter(new GridAdapter(getContext(),getDeckList().getAllFavouriteDecks(),this));
+            setGridView((GridView) getView().findViewById(gridId));
+            getGridView().setAdapter(getGridAdapter());
+        }
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         updateGrid(R.id.favouritesGrid);
-        this.searchView = getActivity().findViewById(R.id.favouritesSearch);
-        searchView.setOnQueryTextListener(new DeckSearchOnQueryTextListener(deckList,this));
+        setSearchView(getActivity().findViewById(R.id.favouritesSearch));
+        getSearchView().setOnQueryTextListener(new DeckSearchOnQueryTextListener(getDeckList(),this));
     }
 
 

@@ -17,6 +17,8 @@ public class DeckSearchOnQueryTextListener implements SearchView.OnQueryTextList
     public boolean onQueryTextSubmit(String query) {
         if(fragment instanceof AllDecksFragment) {
             ((AllDecksFragment) fragment).displaySearchResults(MainActivity.searchDeck(query,deckList));
+        } else if(fragment instanceof FavouritesFragment) {
+            ((FavouritesFragment) fragment).displaySearchResults(MainActivity.searchDeck(query,deckList.getAllFavouritesAsDeckList()));
         }
         return false;
     }
@@ -25,6 +27,8 @@ public class DeckSearchOnQueryTextListener implements SearchView.OnQueryTextList
     public boolean onQueryTextChange(String newText) {
         if(fragment instanceof AllDecksFragment) {
             ((AllDecksFragment) fragment).displaySearchResults(MainActivity.searchDeck(newText,deckList));
+        } else if(fragment instanceof FavouritesFragment) {
+            ((FavouritesFragment) fragment).displaySearchResults(MainActivity.searchDeck(newText,deckList.getAllFavouritesAsDeckList()));
         }
         return true;
     }

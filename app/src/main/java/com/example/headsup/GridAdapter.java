@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import org.json.JSONException;
 
@@ -47,7 +48,6 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        System.out.println(decks.get(position).toString());
         if(inflater == null) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -64,6 +64,9 @@ public class GridAdapter extends BaseAdapter {
         deckNameView.setText(decks.get(position).getName());
         iconView.setImageResource(decks.get(position).getIconId());
         ImageView favouriteView = convertView.findViewById(R.id.favourite_star);
+
+
+
         if(decks.get(position).isFavourite()) {
             favouriteView.setImageResource(R.drawable.ic_baseline_star_24);
         } else {
@@ -73,17 +76,25 @@ public class GridAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
+
                 try {
-                    toggleFavouriteOnDeck(position);
+                    if(parentFragment instanceof AllDecksFragment) {
+                        toggleFavouriteOnDeck(position,false);
+                        AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
+                        allDecksFragment.updateGrid(R.id.allDecksGrid);
+                    } else if(parentFragment instanceof FavouritesFragment) {
+
+                        toggleFavouriteOnDeck(position,true);
+                        FavouritesFragment favouritesFragment = (FavouritesFragment) parentFragment;
+                        favouritesFragment.updateGrid(R.id.favouritesGrid);
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if(parentFragment instanceof AllDecksFragment) {
-                    AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
-                    allDecksFragment.updateGrid(R.id.allDecksGrid);
-                }
+
             }
         });
         TextView highScoreView = convertView.findViewById(R.id.highscore);
@@ -135,8 +146,8 @@ public class GridAdapter extends BaseAdapter {
         MainActivity.deckList.remove(position);
     }
 
-    private void toggleFavouriteOnDeck(int position) throws IOException, JSONException {
-        MainActivity.deckList.toggleDeckFavourite(position, context);
+    private void toggleFavouriteOnDeck(int position, boolean favFragment) throws IOException, JSONException {
+        MainActivity.deckList.toggleDeckFavourite(position, context,favFragment);
 
     }
 

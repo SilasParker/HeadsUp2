@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "296149100231",
+    "project_id": "headsup-a8f9a",
+    "storage_bucket": "headsup-a8f9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296149100231:android:8882516dd7a2b81cb8c0e2",
+        "android_client_info": {
+          "package_name": "com.example.headsup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "296149100231-6247iccf0io92joe2bd1hteqo25mm9fb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdQUS6SiOVela_VRJrKAQQHoerL2-PVBE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "296149100231-6247iccf0io92joe2bd1hteqo25mm9fb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
