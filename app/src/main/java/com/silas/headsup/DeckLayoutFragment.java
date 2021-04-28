@@ -1,4 +1,4 @@
-package com.example.headsup;
+package com.silas.headsup;
 
 import android.content.Context;
 import android.content.Intent;

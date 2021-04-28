@@ -1,11 +1,10 @@
-package com.example.headsup;
+package com.silas.headsup;
 
 import android.content.Context;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DeckList {
@@ -31,8 +30,8 @@ public class DeckList {
         return deckArrToReturn;
     }
 
-    public DeckList getAllFavouritesAsDeckList() {
-        DeckList deckListToReturn = new DeckList(context);
+    public com.silas.headsup.DeckList getAllFavouritesAsDeckList() {
+        com.silas.headsup.DeckList deckListToReturn = new com.silas.headsup.DeckList(context);
         deckListToReturn.setAllDecks(getAllFavouriteDecks());
         return deckListToReturn;
     }

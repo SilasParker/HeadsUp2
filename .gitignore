@@ -13,12 +13,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-.idea/vcs.xml
-.idea/vcs.xml
-app/build.gradle
-app/src/main/AndroidManifest.xml
-app/build.gradle
-.idea/gradle.xml
-app/build.gradle
-app/google-services.json
-build.gradle

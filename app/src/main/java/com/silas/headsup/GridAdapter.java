@@ -1,4 +1,4 @@
-package com.example.headsup;
+package com.silas.headsup;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import org.json.JSONException;
 
@@ -82,10 +81,10 @@ public class GridAdapter extends BaseAdapter {
                         toggleFavouriteOnDeck(position,false);
                         AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
                         allDecksFragment.updateGrid(R.id.allDecksGrid);
-                    } else if(parentFragment instanceof FavouritesFragment) {
+                    } else if(parentFragment instanceof com.silas.headsup.FavouritesFragment) {
 
                         toggleFavouriteOnDeck(position,true);
-                        FavouritesFragment favouritesFragment = (FavouritesFragment) parentFragment;
+                        com.silas.headsup.FavouritesFragment favouritesFragment = (com.silas.headsup.FavouritesFragment) parentFragment;
                         favouritesFragment.updateGrid(R.id.favouritesGrid);
                     }
 

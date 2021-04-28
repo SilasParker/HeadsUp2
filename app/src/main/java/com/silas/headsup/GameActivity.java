@@ -1,10 +1,7 @@
-package com.example.headsup;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.silas.headsup;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,15 +13,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity implements SensorEventListener {
 
-    private Game game;
+    private com.silas.headsup.Game game;
     private ArrayList<String> deck;
     private TextView cardName, timerView, scoreView, countdownView, gamePauseTextView, gameResultActualScore, gameResultHighScore, gameResultDifficulty;
     private String currentCard;
@@ -74,7 +72,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void setGame(Deck deck, int timer, int difficulty) {
-        this.game = new Game(deck, timer, difficulty);
+        this.game = new com.silas.headsup.Game(deck, timer, difficulty);
         this.deck = game.getUsedDeck();
     }
 
@@ -238,7 +236,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.gameResultReplayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),GameActivity.class);
+                Intent intent = new Intent(getApplicationContext(), com.silas.headsup.GameActivity.class);
                 intent.putExtra("deck", game.getDeck());
                 intent.putExtra("timer",game.getMaxTimer());
                 intent.putExtra("difficulty",game.getDifficulty());

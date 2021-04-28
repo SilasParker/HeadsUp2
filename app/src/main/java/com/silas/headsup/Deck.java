@@ -1,7 +1,6 @@
-package com.example.headsup;
+package com.silas.headsup;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.Toast;
@@ -14,7 +13,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -61,13 +59,13 @@ public class Deck implements Parcelable {
 
     public static final Creator<Deck> CREATOR = new Creator<Deck>() {
         @Override
-        public Deck createFromParcel(Parcel in) {
-            return new Deck(in);
+        public com.silas.headsup.Deck createFromParcel(Parcel in) {
+            return new com.silas.headsup.Deck(in);
         }
 
         @Override
-        public Deck[] newArray(int size) {
-            return new Deck[size];
+        public com.silas.headsup.Deck[] newArray(int size) {
+            return new com.silas.headsup.Deck[size];
         }
     };
 

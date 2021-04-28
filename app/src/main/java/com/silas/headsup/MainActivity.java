@@ -1,18 +1,21 @@
-package com.example.headsup;
+package com.silas.headsup;
+
+
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.MenuItem;
-import android.widget.Toast;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,19 +23,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
-
-    /*
-                        TODO:
-     -see if there's anything left to do or branch for favourites
-    */
+public class MainActivity extends AppCompatActivity
+{
     public static DeckList deckList;
     public static SharedPreferences sharedPrefs;
 
@@ -43,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPrefs = getSharedPreferences("headsUpPrefs",Context.MODE_PRIVATE);
+        sharedPrefs = getSharedPreferences("headsUpPrefs", Context.MODE_PRIVATE);
         if(!sharedPrefs.contains("firstAccess")) {
             setUpAppForFirstRun();
         }
@@ -72,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 */
+        System.out.println("anything");
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference ref = db.getReference("test");
+        System.out.println(ref);
+        ref.setValue(27);
 
 
     }
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         return new ArrayList<Deck>();
     }
 
-    
+
 
 
 
@@ -163,16 +164,23 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject deckJSON = new JSONObject(response);
                 if(deckJSON != null) {
                     boolean validJson = true;
-                    String name = deckJSON.getString("name");
-                    String description = deckJSON.getString("description");
-                    String author = deckJSON.getString("author");
-                    JSONArray easyJson = deckJSON.getJSONArray("easy");
-                    JSONArray mediumJson = deckJSON.getJSONArray("medium");
-                    JSONArray hardJson = deckJSON.getJSONArray("hard");
-                    int icon = deckJSON.getInt("icon");
-                    boolean custom = deckJSON.getBoolean("custom");
-                    int highscore = deckJSON.getInt("highscore");
-                    boolean favourite = deckJSON.getBoolean("favourite");
+                    String name = null, description = null, author = null;
+                    JSONArray easyJson = null, mediumJson = null, hardJson = null;
+                    int icon = -1, highscore = -1;
+                    boolean custom = true, favourite = false;
+                    try {
+                        name = deckJSON.getString("name");
+                        description = deckJSON.getString("description");
+                        author = deckJSON.getString("author");
+                        easyJson = deckJSON.getJSONArray("easy");
+                        mediumJson = deckJSON.getJSONArray("medium");
+                        hardJson = deckJSON.getJSONArray("hard");
+                        icon = deckJSON.getInt("icon");
+                        custom = deckJSON.getBoolean("custom");
+                        highscore = deckJSON.getInt("highscore");
+                        favourite = deckJSON.getBoolean("favourite");
+                    } catch(JSONException e) {
+                    }
                     if(name == null || description == null || author == null || easyJson == null || mediumJson == null || hardJson == null) {
                         validJson = false;
                     }
@@ -228,5 +236,35 @@ public class MainActivity extends AppCompatActivity {
         deckList.addLiteralDeck(deck2);
     }
 
+    /*
+    FirebaseDatabase root;
+    DatabaseReference reference;
+
+    EditText name, phone, email;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        name = findViewById(R.id.editName);
+        phone = findViewById(R.id.editPhone);
+        email = findViewById(R.id.editEmail);
+    }
+
+
+    public void onSubmit(View view)
+    {
+        Student student = new Student(name.getText().toString(),phone.getText().toString(),email.getText().toString());
+
+
+        root = FirebaseDatabase.getInstance();
+        reference = root.getReference("student");
+        System.out.println(reference);
+        reference.setValue(student);
+
+    }
+*/
 
 }

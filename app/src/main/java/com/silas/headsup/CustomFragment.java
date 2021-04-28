@@ -1,4 +1,4 @@
-package com.example.headsup;
+package com.silas.headsup;
 
 
 
@@ -19,11 +19,21 @@ public class CustomFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference ref = db.getReference();
-        ref.setValue("WAG1 GGGGG");
+
         return inflater.inflate(R.layout.fragment_custom,container,false);
 
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("anything");
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference ref = db.getReference("else");
+        System.out.println(ref);
+        ref.setValue("test");
+    }
+
+
 }

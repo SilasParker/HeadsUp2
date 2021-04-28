@@ -1,4 +1,4 @@
-package com.example.headsup;
+package com.silas.headsup;
 
 import java.util.ArrayList;
 import java.util.Random;
