@@ -131,6 +131,9 @@ public class GridAdapter extends BaseAdapter {
                 if(parentFragment instanceof AllDecksFragment) {
                     AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
                     allDecksFragment.onDeckSelectedToPlay(position);
+                } else if(parentFragment instanceof FavouritesFragment) {
+                    FavouritesFragment favouritesFragment = (FavouritesFragment) parentFragment;
+                    favouritesFragment.onDeckSelectedToPlay(position);
                 }
             }
 

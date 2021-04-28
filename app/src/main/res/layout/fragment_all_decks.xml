@@ -16,12 +16,13 @@
         app:layout_constraintBottom_toTopOf="@+id/allDecksGrid" />
 
 
+
     <GridView
         android:id="@+id/allDecksGrid"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="683dp"
+
         android:numColumns="2"
         android:scrollbars="vertical"
 

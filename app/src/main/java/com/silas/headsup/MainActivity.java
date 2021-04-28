@@ -68,11 +68,6 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 */
-        System.out.println("anything");
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference ref = db.getReference("test");
-        System.out.println(ref);
-        ref.setValue(27);
 
 
     }
