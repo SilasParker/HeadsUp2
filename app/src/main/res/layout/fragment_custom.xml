@@ -23,12 +23,14 @@
         android:layout_height="wrap_content"
         android:fillViewport="true"
         android:id="@+id/customScrollView"
+        android:padding="10dp"
         app:layout_constraintTop_toBottomOf="@+id/customSearch">
 
         <TableLayout
             android:id="@+id/customTableLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:stretchColumns="*"
             >
 
             <TableRow
@@ -39,7 +41,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name of Deck"
-                android:textSize="30dp" />
+                android:textSize="20sp"
+                android:gravity="center"
+                />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Author"
+                    android:textSize="20sp"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:id="@+id/customDeckSizeIcon"
+                    android:src="@drawable/ic_baseline_format_list_numbered_24"
+                    android:layout_height="match_parent"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:id="@+id/customDownloadsCountIcon"
+                    android:src="@drawable/ic_baseline_file_download_24"
+                    android:layout_height="match_parent"
+                    android:gravity="center"/>
 
 
 
@@ -49,5 +72,38 @@
         </TableLayout>
     </ScrollView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/customFloatingDownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_baseline_file_download_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="30dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/customFloatingAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="openAddDeckScreen"
+        app:srcCompat="@drawable/ic_baseline_add_box_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/customFloatingDate"
+        app:layout_constraintStart_toEndOf="@+id/customFloatingDownload"
+        android:layout_marginBottom="30dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/customFloatingDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_baseline_calendar_today_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
