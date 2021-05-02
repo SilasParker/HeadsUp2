@@ -112,6 +112,14 @@ public class Deck implements Parcelable {
         return this.description;
     }
 
+    public ArrayList<String> getEasyCards() { return this.easyCards;}
+
+    public ArrayList<String> getMediumCards() {return this.mediumCards;}
+
+    public ArrayList<String> getHardCards() {return this.hardCards;}
+
+    public String getAuthor() {return this.author;}
+
     public ArrayList<String> getDeckByDifficulty(int difficulty) {
         ArrayList<String> deckToReturn = new ArrayList<>();
         switch(difficulty) {

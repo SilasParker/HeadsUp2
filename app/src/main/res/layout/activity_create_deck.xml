@@ -67,18 +67,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+
+
             <EditText
                 android:id="@+id/customCreateDescription"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:ems="10"
                 android:layout_height="wrap_content"
                 android:hint="Type your description here..."
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                android:layout_marginTop="10dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/customCreateAuthorName"/>
+
+            <Spinner
+                android:id="@+id/customCreateSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintTop_toTopOf="@id/customCreateEasyTitle"
+                app:layout_constraintBottom_toBottomOf="@id/customCreateEasyTitle"/>
 
             <TextView
                 android:id="@+id/customCreateEasyTitle"
@@ -188,11 +199,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/customCreateHardTitle"/>
 
-            <Spinner
-                android:id="@+id/customCreateSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:layout_editor_absoluteY="549dp" />
+
 
             <TextView
                 android:id="@+id/customCreateTotalCards"
@@ -205,6 +212,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 />
+
+
 
             <Button
                 android:id="@+id/customCreateSaveUpload"
