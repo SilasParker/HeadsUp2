@@ -117,6 +117,8 @@ public class CreateDeckActivity extends AppCompatActivity {
             deck.saveJsonToFile(this,true);
             DatabaseReference newDeckRef = database.child("decks").push();
             newDeckRef.setValue(deck);
+            newDeckRef.child("downloads").setValue(0);
+            newDeckRef.child("id").setValue(newDeckRef.getKey());
             Toast.makeText(this,"Deck successfully uploaded!",Toast.LENGTH_LONG).show();
             finish();
         } else {
