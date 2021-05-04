@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/customDownloadName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="DECK NAME"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/customDownloadExitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/customDownloadDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25sp"
+        android:gravity="center"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis libero ac nisi hendrerit blandit non sed libero. Aliquam ut condimentum justo. Pellentesque aliquet sapien sit amet tellus dignissim, vel ultricies dolor sodales. Nam sit amet sollicitudin neque. Maecenas consequat nisl eget vehicula finibus. Vivamus in elit ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc vehicula eu leo non molestie. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi volutpat mi erat, sed maximus quam mattis a. In at pretium nisl. Donec sem odio, aliquet sit amet blandit ac, fringilla vitae elit. Praesent sit amet nulla dignissim, molestie nibh vel, elementum mi."
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customDownloadName" />
+
+    <TextView
+        android:id="@+id/customDownloadEasyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EASY:"
+        android:textSize="25sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/customDownloadMediumTitle"
+        app:layout_constraintTop_toBottomOf="@id/customDownloadDescription" />
+
+    <TextView
+        android:id="@+id/customDownloadEasyTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@id/customDownloadEasyTitle"
+        app:layout_constraintTop_toBottomOf="@id/customDownloadEasyTitle"
+        app:layout_constraintEnd_toEndOf="@id/customDownloadEasyTitle"/>
+
+    <TextView
+        android:id="@+id/customDownloadMediumTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MEDIUM:"
+        android:textSize="25sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toEndOf="@id/customDownloadEasyTitle"
+        app:layout_constraintEnd_toStartOf="@id/customDownloadHardTitle"
+        app:layout_constraintTop_toBottomOf="@id/customDownloadDescription" />
+
+    <TextView
+        android:id="@+id/customDownloadMediumTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@id/customDownloadMediumTitle"
+        app:layout_constraintTop_toBottomOf="@id/customDownloadMediumTitle"
+        app:layout_constraintEnd_toEndOf="@id/customDownloadMediumTitle"/>
+
+    <TextView
+        android:id="@+id/customDownloadHardTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HARD:"
+        android:textSize="25sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintStart_toEndOf="@id/customDownloadMediumTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/customDownloadDescription" />
+
+    <TextView
+        android:id="@+id/customDownloadHardTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@id/customDownloadHardTitle"
+        app:layout_constraintTop_toBottomOf="@id/customDownloadHardTitle"
+        app:layout_constraintEnd_toEndOf="@id/customDownloadHardTitle"/>
+
+    <TextView
+        android:id="@+id/customDownloadAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="By: AUTHOR"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/customDownloadMediumTotal" />
+
+    <Button
+        android:id="@+id/customDownloadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/customDownloadAuthor"
+        android:text="DOWNLOAD" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,8 +2,10 @@ package com.silas.headsup;
 
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -56,6 +59,7 @@ public class CustomFragment extends Fragment {
             }
         });
         allResultDecks = new ArrayList<>();
+        addDatabaseListener();
     }
 
     private void addDatabaseListener() {
@@ -80,8 +84,8 @@ public class CustomFragment extends Fragment {
             String id = (String) deck.get("id");
             String name = (String) deck.get("name");
             String author = (String) deck.get("author");
-            int downloads = (int) deck.get("downloads");
-            int size = (int) deck.get("size");
+            int downloads = (int) (long) deck.get("downloads");
+            int size = (int) (long) deck.get("deckSize");
             ResultDeck resultDeck = new ResultDeck(id,name,author,downloads,size);
             allResultDecks.add(resultDeck);
         }
@@ -95,16 +99,53 @@ public class CustomFragment extends Fragment {
             TextView downloadsView = new TextView(getContext());
             nameView.setText(resultDeck.getName());
             authorView.setText(resultDeck.getAuthor());
-            sizeView.setText(resultDeck.getSize());
-            downloadsView.setText(resultDeck.getDownloads());
+            sizeView.setText(String.valueOf(resultDeck.getSize()));
+            downloadsView.setText(String.valueOf(resultDeck.getDownloads()));
             tableRow.addView(nameView);
             tableRow.addView(authorView);
             tableRow.addView(sizeView);
-            tableRow.addView(sizeView);
+            tableRow.addView(downloadsView);
+            tableRow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onDeckSelectedToDownload(resultDeck);
+                }
+            });
             tableLayout.addView(tableRow);
-            //hows this? https://stackoverflow.com/questions/7279501/programmatically-adding-tablerow-to-tablelayout-not-working
         }
     }
+
+    private void onDeckSelectedToDownload(ResultDeck resultDeck) {
+        DatabaseReference deckRef = database.getReference("decks/"+resultDeck.getId());
+        final DataSnapshot[] deckSnapshot = new DataSnapshot[1];
+        deckRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                deckSnapshot[0] = snapshot;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(),"Could not connect to database, try again later",Toast.LENGTH_LONG).show();
+            }
+        });
+        Map<String,Object> deckMap = (Map<String, Object>) deckSnapshot[0].getValue();
+
+        View view = getView();
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popUpView = inflater.inflate(R.layout.deck_download_overlay,null);
+        int width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+        int height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+        TextView deckName = (TextView) popUpView.findViewById(R.id.customDownloadName);
+        deckName.setText((String) deckMap.get("name"));
+        TextView deckDescription = (TextView) popUpView.findViewById(R.id.customDownloadDescription);
+        deckDescription.setText((String) deckMap.get("description"));
+        TextView easyCount = (TextView) popUpView.findViewById(R.id.customDownloadEasyTotal);
+        TextView mediumCount = (TextView) popUpView.findViewById(R.id.customDownloadMediumTotal);
+        TextView hardCount = (TextView) popUpView.findViewById(R.id.customDownloadHardTotal);
+        easyCount.setText(deckMap.get()); //how to get easy count??
+    }
+
 
 
 
