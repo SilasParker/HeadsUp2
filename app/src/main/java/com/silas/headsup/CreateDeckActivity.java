@@ -119,6 +119,9 @@ public class CreateDeckActivity extends AppCompatActivity {
             newDeckRef.setValue(deck);
             newDeckRef.child("downloads").setValue(0);
             newDeckRef.child("id").setValue(newDeckRef.getKey());
+            newDeckRef.child("easyCount").setValue(easyCards.length);
+            newDeckRef.child("mediumCount").setValue(mediumCards.length);
+            newDeckRef.child("hardCount").setValue(hardCards.length);
             Toast.makeText(this,"Deck successfully uploaded!",Toast.LENGTH_LONG).show();
             finish();
         } else {
