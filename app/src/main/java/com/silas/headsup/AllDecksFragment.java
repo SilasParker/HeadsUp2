@@ -28,9 +28,12 @@ public class AllDecksFragment extends com.silas.headsup.DeckLayoutFragment {
         }
     }
 
-
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("yo");
+        updateGrid(R.id.allDecksGrid);
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

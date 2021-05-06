@@ -1,6 +1,7 @@
 package com.silas.headsup;
 
 import android.content.Context;
+import android.icu.text.SymbolTable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.Toast;
@@ -179,15 +180,25 @@ public class Deck implements Parcelable {
         JSONObject deck = this.getAsJson();
         String deckString = deck.toString();
         String deckFileName = this.getDirectorySafeName()+".json";
+        System.out.println("DECK FILE: "+deckFileName);
         File file = new File(context.getFilesDir(),deckFileName);
         if(!file.exists()) {
+            System.out.println("file didnt exist");
             FileWriter fileWriter = new FileWriter(file);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(deckString);
             bufferedWriter.close();
         } else if(overwrite) {
+            System.out.println("file existed and overwritten");
             FileWriter fw = new FileWriter(file,false);
             BufferedWriter bufferedWriter = new BufferedWriter(fw);
+            bufferedWriter.write(deckString);
+            bufferedWriter.close();
+        } else if(file.exists() && !overwrite) {
+            System.out.println("allow");
+            file = new File(context.getFilesDir(),deckFileName+"1");
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(deckString);
             bufferedWriter.close();
         }

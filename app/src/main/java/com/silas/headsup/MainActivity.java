@@ -1,5 +1,11 @@
 package com.silas.headsup;
-
+//TODO:
+/*
+refresh grid when deck created not showing new deck (have to restart app)
+center screen when typing new deck
+count cards as typing new deck
+clear database results instead of appending
+ */
 
 
 import android.content.Context;
@@ -188,15 +194,18 @@ public class MainActivity extends AppCompatActivity
                         }
                         if(validJson) {
                             Deck newDeck = new Deck(name,description,author,easy,medium,hard,icon,custom,highscore,favourite);
+                            System.out.println(newDeck.toString());
                             allDecks.add(newDeck);
                             if(newDeck.isFavourite()) {
                                 favDecks.add(newDeck);
                             }
                         } else {
-                            Toast.makeText(this,"Invalid Deck Found",Toast.LENGTH_LONG).show();
+                            file.delete();
+                            Toast.makeText(this,"Invalid Deck Found and Deleted",Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(this,"Invalid Deck Found",Toast.LENGTH_LONG).show();
+                        file.delete();
+                        Toast.makeText(this,"Invalid Deck Found and Deleted",Toast.LENGTH_LONG).show();
                     }
                 }
             }

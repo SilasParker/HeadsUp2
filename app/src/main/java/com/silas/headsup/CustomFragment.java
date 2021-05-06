@@ -142,6 +142,8 @@ public class CustomFragment extends Fragment {
                 deckName.setText((String) deckMap.get("name"));
                 TextView deckDescription = (TextView) popUpView.findViewById(R.id.customDownloadDescription);
                 deckDescription.setText((String) deckMap.get("description"));
+                TextView author = (TextView) popUpView.findViewById(R.id.customDownloadAuthor);
+                author.setText("By: "+(String) deckMap.get("author"));
                 TextView easyCount = (TextView) popUpView.findViewById(R.id.customDownloadEasyTotal);
                 TextView mediumCount = (TextView) popUpView.findViewById(R.id.customDownloadMediumTotal);
                 TextView hardCount = (TextView) popUpView.findViewById(R.id.customDownloadHardTotal);
@@ -164,9 +166,9 @@ public class CustomFragment extends Fragment {
                         String name = (String) deckMap.get("name");
                         String description = (String) deckMap.get("description");
                         String author = (String) deckMap.get("author");
-                        String[] easyCards = new String[(int) deckMap.get("easyCount")];
-                        String[] mediumCards = new String[(int) deckMap.get("mediumCount")];
-                        String[] hardCards = new String[(int) deckMap.get("hardCount")];
+                        String[] easyCards = new String[(int) (long) deckMap.get("easyCount")];
+                        String[] mediumCards = new String[(int) (long) deckMap.get("mediumCount")];
+                        String[] hardCards = new String[(int) (long) deckMap.get("hardCount")];
                         deckRef.child("easyCards").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -203,16 +205,21 @@ public class CustomFragment extends Fragment {
 
                             }
                         });
-                        int iconId = (int) deckMap.get("iconId");
+                        int iconId = (int) (long) deckMap.get("iconId");
                         Deck newDeck = new Deck(name,description,author,easyCards,mediumCards,hardCards,iconId,true,0,false);
+                        System.out.println("DECK CREATED:\n"+newDeck.toString());
                         try {
-                            newDeck.saveJsonToFile(getContext(),true);
+                            newDeck.saveJsonToFile(getContext(),false);
+                            System.out.println("saved????");
                         } catch (JSONException e) {
+                            System.out.println("didnt work");
                             e.printStackTrace();
                         } catch (IOException e) {
+                            System.out.println("didnt work2");
                             e.printStackTrace();
                         }
-                        deckRef.child("downloads").setValue(String.valueOf((int) deckMap.get("downloadss") + 1));
+                        System.out.println("skipped?");
+                        deckRef.child("downloads").setValue((int) (long) deckMap.get("downloads")+1);
                         popUp.dismiss();
                     }
                 });
