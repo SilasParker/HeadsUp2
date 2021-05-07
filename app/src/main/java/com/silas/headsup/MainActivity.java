@@ -1,7 +1,7 @@
 package com.silas.headsup;
 //TODO:
 /*
-refresh grid when deck created not showing new deck (have to restart app)
+deleting wrong deck problem again, problem is in getView in grid adapter
 center screen when typing new deck
 count cards as typing new deck
 clear database results instead of appending
@@ -146,11 +146,14 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-    private ArrayList<Deck> getAllStoredDecks() throws IOException, JSONException {
+
+    public ArrayList<Deck> getAllStoredDecks() throws IOException, JSONException {
         ArrayList<Deck> allDecks = new ArrayList<>();
         ArrayList<Deck> favDecks = new ArrayList<>();
         File directory = new File(String.valueOf(this.getApplicationContext().getFilesDir()));
         for(File file : directory.listFiles()) {
+            System.out.println("FILE: "+file);
+            String error = "";
             if(file.isFile() && file.getPath().endsWith(".json")) {
                 FileReader fileReader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -184,27 +187,67 @@ public class MainActivity extends AppCompatActivity
                     }
                     if(name == null || description == null || author == null || easyJson == null || mediumJson == null || hardJson == null) {
                         validJson = false;
+                        error += "One of these is null: name, desc, author, easyJson, mediumJson, hardJson\n";
                     }
                     if(validJson) {
                         String[] easy = jsonStringArrayToRegularStringArray(easyJson);
                         String[] medium = jsonStringArrayToRegularStringArray(mediumJson);
                         String[] hard = jsonStringArrayToRegularStringArray(hardJson);
-                        if(name.length() > 35 || description.length() > 200 || author.length() > 20 || easy.length == 0 || icon > 9 || highscore < 0 || highscore > 999) {
+                        if(icon > 100) {
+                            switch(icon) {
+                                case 2131165317:
+                                    icon = 0;
+                                    break;
+                                case 2131165324:
+                                    icon = 1;
+                                    break;
+                                case 2131165325:
+                                    icon = 2;
+                                    break;
+                                case 2131165326:
+                                    icon = 3;
+                                    break;
+                                case 2131165327:
+                                    icon = 4;
+                                    break;
+                                case 2131165328:
+                                    icon = 5;
+                                    break;
+                                case 2131165331:
+                                    icon = 6;
+                                    break;
+                                case 2131165333:
+                                    icon = 7;
+                                    break;
+                                case 2131165334:
+                                    icon = 8;
+                                    break;
+                                case 2131165337:
+                                    icon = 9;
+                                    break;
+                                default:
+                                    icon = 0;
+                            }
+                        }
+                        if(name.length() > 35 || description.length() > 200 || author.length() > 20 || easy.length == 0 || icon > 9 || highscore < 0 || highscore > 999 || icon < 0) {
                             validJson = false;
+                            error += "Either the name was too long, desc too long, author too long, easy has 0 entries, icon is too high, highscore is too low or high\n";
+                            System.out.println(name.length()+" "+description.length()+" "+author.length()+" "+easy.length+" "+icon+" "+highscore);
                         }
                         if(validJson) {
                             Deck newDeck = new Deck(name,description,author,easy,medium,hard,icon,custom,highscore,favourite);
-                            System.out.println(newDeck.toString());
                             allDecks.add(newDeck);
                             if(newDeck.isFavourite()) {
                                 favDecks.add(newDeck);
                             }
                         } else {
                             file.delete();
+                            System.out.println(error);
                             Toast.makeText(this,"Invalid Deck Found and Deleted",Toast.LENGTH_LONG).show();
                         }
                     } else {
                         file.delete();
+                        System.out.println(error);
                         Toast.makeText(this,"Invalid Deck Found and Deleted",Toast.LENGTH_LONG).show();
                     }
                 }

@@ -11,6 +11,10 @@ import android.widget.GridView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 public class FavouritesFragment extends com.silas.headsup.DeckLayoutFragment {
 
 
@@ -24,11 +28,25 @@ public class FavouritesFragment extends com.silas.headsup.DeckLayoutFragment {
 
     @Override
     public void updateGrid(int gridId) {
+        try {
+            MainActivity activity = (MainActivity) getActivity();
+            MainActivity.deckList.setAllDecks(activity.getAllStoredDecks());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         if(this.getDeckList() != null) {
             this.setGridAdapter(new GridAdapter(getContext(),getDeckList().getAllFavouriteDecks(),this));
             setGridView((GridView) getView().findViewById(gridId));
             getGridView().setAdapter(getGridAdapter());
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateGrid(R.id.favouritesGrid);
     }
 
     @Override

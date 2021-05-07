@@ -9,6 +9,10 @@ import android.widget.GridView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 public class AllDecksFragment extends com.silas.headsup.DeckLayoutFragment {
 
 
@@ -21,6 +25,14 @@ public class AllDecksFragment extends com.silas.headsup.DeckLayoutFragment {
 
     @Override
     public void updateGrid(int gridId) {
+        try {
+            MainActivity activity = (MainActivity) getActivity();
+            MainActivity.deckList.setAllDecks(activity.getAllStoredDecks());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         if(this.getDeckList() != null) {
             this.setGridAdapter(new com.silas.headsup.GridAdapter(getContext(),getDeckList().getAllDecks(),this));
             setGridView((GridView) getView().findViewById(gridId));
@@ -31,7 +43,6 @@ public class AllDecksFragment extends com.silas.headsup.DeckLayoutFragment {
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("yo");
         updateGrid(R.id.allDecksGrid);
     }
 
@@ -42,9 +53,9 @@ public class AllDecksFragment extends com.silas.headsup.DeckLayoutFragment {
         this.getSearchView().setOnQueryTextListener(new com.silas.headsup.DeckSearchOnQueryTextListener(this.getDeckList(),this));
     }
 
-
-
-
-
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        updateGrid(R.id.allDecksGrid);
+    }
 }

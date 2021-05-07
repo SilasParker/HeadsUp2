@@ -221,6 +221,7 @@ public class CustomFragment extends Fragment {
                         System.out.println("skipped?");
                         deckRef.child("downloads").setValue((int) (long) deckMap.get("downloads")+1);
                         popUp.dismiss();
+
                     }
                 });
 

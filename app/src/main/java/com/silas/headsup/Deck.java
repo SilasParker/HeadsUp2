@@ -195,12 +195,7 @@ public class Deck implements Parcelable {
             bufferedWriter.write(deckString);
             bufferedWriter.close();
         } else if(file.exists() && !overwrite) {
-            System.out.println("allow");
-            file = new File(context.getFilesDir(),deckFileName+"1");
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(deckString);
-            bufferedWriter.close();
+            Toast.makeText(context.getApplicationContext(), "Couldn't download because name is too similar to existing deck",Toast.LENGTH_LONG).show();
         }
     }
 
