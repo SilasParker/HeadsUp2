@@ -65,9 +65,21 @@ public class DeckList {
         return decks.get(position);
     }
 
-    public void remove(int position) {
-        decks.get(position).removeJsonFromDir(context);
-        decks.remove(position);
+    public void remove(int position, boolean favouriteFragment) {
+        if(!favouriteFragment) {
+            decks.get(position).removeJsonFromDir(context);
+            decks.remove(position);
+        } else {
+            int favPosition = -1;
+            while(position >= 0) {
+                favPosition++;
+                if(getDeckAt(favPosition).isFavourite()) {
+                    position--;
+                }
+            }
+            decks.get(favPosition).removeJsonFromDir(context);
+            decks.remove(favPosition);
+        }
 
     }
 

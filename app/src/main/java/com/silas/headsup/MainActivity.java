@@ -1,10 +1,8 @@
 package com.silas.headsup;
 //TODO:
 /*
-deleting wrong deck problem again, problem is in getView in grid adapter
-center screen when typing new deck
-count cards as typing new deck
-clear database results instead of appending
+add new line to name/author in generateTable
+search database
  */
 
 

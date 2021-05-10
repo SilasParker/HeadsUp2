@@ -3,10 +3,12 @@ package com.silas.headsup;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,10 +26,12 @@ import java.util.ArrayList;
 
 public class CreateDeckActivity extends AppCompatActivity {
     private EditText deckNameEntry, authorNameEntry, descriptionEntry, easyCardEntry, mediumCardEntry, hardCardEntry;
+    private TextView easyCardCountView, mediumCardCountView, hardCardCountView;
     private Spinner iconSpinner;
     private ImageView exitButton;
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     private Button submit;
+    private int easyCardCount = 0, mediumCardCount = 0, hardCardCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,9 @@ public class CreateDeckActivity extends AppCompatActivity {
         this.exitButton = findViewById(R.id.customCreateExit);
         this.iconSpinner = findViewById(R.id.customCreateSpinner);
         this.submit = findViewById(R.id.customCreateSaveUpload);
+        this.easyCardCountView = findViewById(R.id.customCreateEasyTotal);
+        this.mediumCardCountView = findViewById(R.id.customCreateMediumTotal);
+        this.hardCardCountView = findViewById(R.id.customCreateHardTotal);
 
         ArrayList<Integer> iconsList = new ArrayList<>();
         iconsList.add(R.drawable.ic_baseline_computer_24);
@@ -58,6 +65,8 @@ public class CreateDeckActivity extends AppCompatActivity {
         this.iconSpinner = findViewById(R.id.customCreateSpinner);
         SpinnerImageAdapter adapter = new SpinnerImageAdapter(this,R.layout.icon_selector_row,0,iconsList);
         iconSpinner.setAdapter(adapter);
+
+
 
         this.exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +87,33 @@ public class CreateDeckActivity extends AppCompatActivity {
             }
         });
 
+        this.easyCardEntry.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                String entered = easyCardEntry.getText().toString();
+                String[] lines = entered.split("\n");
+                easyCardCountView.setText("Total: "+String.valueOf(lines.length));
+                return false;
+            }
+        });
+        this.mediumCardEntry.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                String entered = mediumCardEntry.getText().toString();
+                String[] lines = entered.split("\n");
+                mediumCardCountView.setText("Total: "+String.valueOf(lines.length));
+                return false;
+            }
+        });
+        this.hardCardEntry.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                String entered = hardCardEntry.getText().toString();
+                String[] lines = entered.split("\n");
+                hardCardCountView.setText("Total: "+String.valueOf(lines.length));
+                return false;
+            }
+        });
 
 
     }

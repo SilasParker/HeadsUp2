@@ -86,18 +86,31 @@ public class CustomFragment extends Fragment {
 
     private void generateTable(DataSnapshot dataSnapshot) {
         Map<String,Object> results = (Map<String, Object>) dataSnapshot.getValue();
+        TableLayout tableLayout = (TableLayout) getActivity().findViewById(R.id.customTableLayout);
+        for(int i = 1;i < tableLayout.getChildCount();i++) {
+            View child = tableLayout.getChildAt(i);
+            if(child instanceof  TableRow) {
+                ((TableRow) child).removeAllViews();
+            }
+        }
         if(results != null) {
             for (Map.Entry<String, Object> entry : results.entrySet()) {
                 Map deck = (Map) entry.getValue();
                 String id = (String) deck.get("id");
                 String name = (String) deck.get("name");
+                if(name.length() > 20) {
+                    int reset = 0;
+                    for(int i = 0;i < name.length();i++) {
+                        //carry on
+                    }
+                }
                 String author = (String) deck.get("author");
                 int downloads = (int) (long) deck.get("downloads");
                 int size = (int) (long) deck.get("deckSize");
                 ResultDeck resultDeck = new ResultDeck(id, name, author, downloads, size);
                 allResultDecks.add(resultDeck);
             }
-            TableLayout tableLayout = (TableLayout) getActivity().findViewById(R.id.customTableLayout);
+
             for (ResultDeck resultDeck : allResultDecks) {
                 TableRow tableRow = new TableRow(getContext());
                 tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));

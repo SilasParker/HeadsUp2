@@ -112,12 +112,14 @@ public class GridAdapter extends BaseAdapter {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                removeDeck(position);
+
 
                                 if(parentFragment instanceof AllDecksFragment) {
+                                    removeDeck(position,false);
                                     AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
                                     allDecksFragment.updateGrid(R.id.allDecksGrid);
                                 } else if(parentFragment instanceof FavouritesFragment) {
+                                    removeDeck(position,true);
                                     FavouritesFragment favouritesFragment = (FavouritesFragment) parentFragment;
                                     favouritesFragment.updateGrid(R.id.favouritesGrid);
                                 }
@@ -147,8 +149,8 @@ public class GridAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void removeDeck(int position) {
-        MainActivity.deckList.remove(position);
+    private void removeDeck(int position, boolean favFragment) {
+        MainActivity.deckList.remove(position,favFragment);
     }
 
     private void toggleFavouriteOnDeck(int position, boolean favFragment) throws IOException, JSONException {
