@@ -1,14 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/holo_blue_light">
 
+
     <TextView
+        android:id="@+id/settingsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="SETTINGS"
         android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"/>
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/settingsTimerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Default Timer Length"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsTitle"
+        android:layout_marginTop="20dp"/>
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/settingsTimerSlider"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:stepSize="1.0"
+        android:value="300.0"
+        android:valueFrom="30.0"
+        android:valueTo="300.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingsTimerTitle" />
+
+    <TextView
+        android:id="@+id/settingsDifficultyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Default Difficulty"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsTimerSlider"
+        android:layout_marginTop="20dp"/>
+
+    <RadioGroup
+        android:id="@+id/settingsDifficultyRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingsDifficultyTitle">
+
+        <RadioButton
+            android:id="@+id/settingsEasyRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="EASY" />
+
+        <RadioButton
+            android:id="@+id/settingsMediumRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="MEDIUM" />
+
+        <RadioButton
+            android:id="@+id/settingsHardRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="HARD" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/settingsBonusTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bonus Time"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsDifficultyRadioGroup"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"/>
+
+    <Switch
+        android:id="@+id/settingsBonusSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsDifficultyRadioGroup"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="50dp"
+         />
+
+    <TextView
+        android:id="@+id/settingsSoundTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sound Effects"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsBonusSwitch"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"/>
+
+    <Switch
+        android:id="@+id/settingsSoundSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsBonusSwitch"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="50dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
