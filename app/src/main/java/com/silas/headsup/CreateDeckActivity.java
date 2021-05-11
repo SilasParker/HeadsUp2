@@ -22,7 +22,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class CreateDeckActivity extends AppCompatActivity {
     private EditText deckNameEntry, authorNameEntry, descriptionEntry, easyCardEntry, mediumCardEntry, hardCardEntry;
@@ -158,6 +162,11 @@ public class CreateDeckActivity extends AppCompatActivity {
             newDeckRef.child("easyCount").setValue(easyCards.length);
             newDeckRef.child("mediumCount").setValue(mediumCards.length);
             newDeckRef.child("hardCount").setValue(hardCards.length);
+            Date date = new Date();
+            ZoneId timeZone = ZoneId.systemDefault();
+            LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();
+            newDeckRef.child("timeYear").setValue(localDate.getYear());
+            newDeckRef.child("timeDay").setValue(localDate.getDayOfYear());
             Toast.makeText(this,"Deck successfully uploaded!",Toast.LENGTH_LONG).show();
             finish();
         } else {

@@ -13,7 +13,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class AllDecksFragment extends com.silas.headsup.DeckLayoutFragment {
+public class AllDecksFragment extends DeckLayoutFragment {
 
 
 
@@ -34,7 +34,7 @@ public class AllDecksFragment extends com.silas.headsup.DeckLayoutFragment {
             e.printStackTrace();
         }
         if(this.getDeckList() != null) {
-            this.setGridAdapter(new com.silas.headsup.GridAdapter(getContext(),getDeckList().getAllDecks(),this));
+            this.setGridAdapter(new GridAdapter(getContext(),getDeckList().getAllDecks(),this));
             setGridView((GridView) getView().findViewById(gridId));
             getGridView().setAdapter(getGridAdapter());
         }
@@ -50,7 +50,7 @@ public class AllDecksFragment extends com.silas.headsup.DeckLayoutFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         updateGrid(R.id.allDecksGrid);
         this.setSearchView(getActivity().findViewById(R.id.allDecksSearch));
-        this.getSearchView().setOnQueryTextListener(new com.silas.headsup.DeckSearchOnQueryTextListener(this.getDeckList(),this));
+        this.getSearchView().setOnQueryTextListener(new DeckSearchOnQueryTextListener(this.getDeckList(),this));
     }
 
     @Override

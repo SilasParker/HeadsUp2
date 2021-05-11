@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.SearchView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -40,7 +41,10 @@ public class CustomFragment extends Fragment {
 
     private ArrayList<ResultDeck> allResultDecks;
     private FirebaseDatabase database;
-    private FloatingActionButton createDeckBtn;
+    private FloatingActionButton createDeckBtn, sortDownloadBtn, sortDateBtn;
+    private TableLayout tableLayout;
+    private SearchView searchView;
+    private DataSnapshot tempSnapShot;
 
     @Nullable
     @Override
@@ -63,8 +67,33 @@ public class CustomFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        this.sortDownloadBtn = getView().findViewById(R.id.customFloatingDownload);
+        sortDownloadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generateTable(tempSnapShot,"",true,false);
+            }
+        });
+        this.sortDateBtn = getView().findViewById(R.id.customFloatingDate);
+        sortDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generateTable(tempSnapShot,"",false,true);
+            }
+        });
         allResultDecks = new ArrayList<>();
         addDatabaseListener();
+        this.tableLayout = getView().findViewById(R.id.customTableLayout);
+        this.searchView = getView().findViewById(R.id.customSearch);
+        this.searchView.setOnQueryTextListener(new DatabaseSearchOnQueryTextListener(this));
+    }
+
+    private void setTempSnapShot(DataSnapshot snapshot) {
+        this.tempSnapShot = snapshot;
+    }
+
+    public DataSnapshot getTempSnapShot() {
+        return this.tempSnapShot;
     }
 
 
@@ -74,7 +103,8 @@ public class CustomFragment extends Fragment {
         decksRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                generateTable(snapshot);
+                setTempSnapShot(snapshot);
+                generateTable(snapshot,"",false,false);
             }
 
             @Override
@@ -84,9 +114,21 @@ public class CustomFragment extends Fragment {
         });
     }
 
-    private void generateTable(DataSnapshot dataSnapshot) {
+    private boolean matchTerm(String search, String name) {
+        if(search.length() == 0) {
+            return true;
+        } if(search.length() > name.length()) {
+            return false;
+        } else if(name.substring(0,search.length()).toLowerCase().equals(search.toLowerCase())) {
+            return true;
+        }
+        return  false;
+    }
+
+    public void generateTable(DataSnapshot dataSnapshot, String search, boolean sortByDownload, boolean sortByDate) {
         Map<String,Object> results = (Map<String, Object>) dataSnapshot.getValue();
         TableLayout tableLayout = (TableLayout) getActivity().findViewById(R.id.customTableLayout);
+        allResultDecks.clear();
         for(int i = 1;i < tableLayout.getChildCount();i++) {
             View child = tableLayout.getChildAt(i);
             if(child instanceof  TableRow) {
@@ -98,19 +140,31 @@ public class CustomFragment extends Fragment {
                 Map deck = (Map) entry.getValue();
                 String id = (String) deck.get("id");
                 String name = (String) deck.get("name");
-                if(name.length() > 20) {
-                    int reset = 0;
-                    for(int i = 0;i < name.length();i++) {
-                        //carry on
+                if(matchTerm(search,name)) {
+                    if (name.length() > 20) {
+                        String beginning = name.substring(0, 20);
+                        String end = name.substring(20);
+                        name = beginning + "\n" + end;
                     }
+                    String author = (String) deck.get("author");
+                    if (author.length() > 10) {
+                        String beginning = author.substring(0, 10);
+                        String end = author.substring(10);
+                        author = beginning + "\n" + end;
+                    }
+                    int downloads = (int) (long) deck.get("downloads");
+                    int size = (int) (long) deck.get("deckSize");
+                    int year = (int) (long) deck.get("timeYear");
+                    int day = (int) (long) deck.get("timeDay");
+                    ResultDeck resultDeck = new ResultDeck(id, name, author, downloads, size,year,day);
+                    allResultDecks.add(resultDeck);
                 }
-                String author = (String) deck.get("author");
-                int downloads = (int) (long) deck.get("downloads");
-                int size = (int) (long) deck.get("deckSize");
-                ResultDeck resultDeck = new ResultDeck(id, name, author, downloads, size);
-                allResultDecks.add(resultDeck);
             }
-
+            if(sortByDownload) {
+                allResultDecks = this.sortByDownloads(allResultDecks);
+            } else if(sortByDate) {
+                allResultDecks = this.sortByDate(allResultDecks);
+            }
             for (ResultDeck resultDeck : allResultDecks) {
                 TableRow tableRow = new TableRow(getContext());
                 tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -137,13 +191,47 @@ public class CustomFragment extends Fragment {
         }
     }
 
+    private ArrayList<ResultDeck> sortByDownloads(ArrayList<ResultDeck> resultDecks) {
+        ArrayList<ResultDeck> sortedResultDecks = new ArrayList<>();
+        while(resultDecks.size() > 0) {
+            int high = -1;
+            ResultDeck deckToAdd = null;
+            for(ResultDeck deck : resultDecks) {
+                if(deck.getDownloads() > high) {
+                    deckToAdd = deck;
+                    high = deck.getDownloads();
+                }
+            }
+            sortedResultDecks.add(deckToAdd);
+            resultDecks.remove(deckToAdd);
+        }
+        return sortedResultDecks;
+    }
+
+    private ArrayList<ResultDeck> sortByDate(ArrayList<ResultDeck> resultDecks) {
+        ArrayList<ResultDeck> sortedResultDecks = new ArrayList<>();
+        while(resultDecks.size() > 0) {
+            int highYear = 0;
+            int highDay = 0;
+            ResultDeck deckToAdd = null;
+            for(ResultDeck deck : resultDecks) {
+                if(deck.getYear() > highYear || (deck.getYear() == highYear && deck.getDay() > highDay)) {
+                    deckToAdd = deck;
+                    highYear = deck.getYear();
+                    highDay = deck.getDay();
+                }
+            }
+            sortedResultDecks.add(deckToAdd);
+            resultDecks.remove(deckToAdd);
+        }
+        return sortedResultDecks;
+    }
+
     private void onDeckSelectedToDownload(ResultDeck resultDeck) {
         DatabaseReference deckRef = database.getReference("decks/"+resultDeck.getId());
-        //final DataSnapshot[] deckSnapshot = new DataSnapshot[1];
         deckRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println("set datasnapshot");
                 Map<String,Object> deckMap = (Map<String, Object>) snapshot.getValue();
 
                 View view = getView();
@@ -220,18 +308,13 @@ public class CustomFragment extends Fragment {
                         });
                         int iconId = (int) (long) deckMap.get("iconId");
                         Deck newDeck = new Deck(name,description,author,easyCards,mediumCards,hardCards,iconId,true,0,false);
-                        System.out.println("DECK CREATED:\n"+newDeck.toString());
                         try {
                             newDeck.saveJsonToFile(getContext(),false);
-                            System.out.println("saved????");
                         } catch (JSONException e) {
-                            System.out.println("didnt work");
                             e.printStackTrace();
                         } catch (IOException e) {
-                            System.out.println("didnt work2");
                             e.printStackTrace();
                         }
-                        System.out.println("skipped?");
                         deckRef.child("downloads").setValue((int) (long) deckMap.get("downloads")+1);
                         popUp.dismiss();
 
@@ -250,7 +333,6 @@ public class CustomFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                System.out.println("didnt set");
                 Toast.makeText(getContext(),"Could not connect to database, try again later",Toast.LENGTH_LONG).show();
             }
         });
