@@ -268,8 +268,8 @@ public class MainActivity extends AppCompatActivity
         editor.putInt("difficulty",2);
         editor.putBoolean("bonusTime",false);
         editor.putBoolean("soundEffects",true);
-        editor.putInt("cardColour",1);
-        editor.putInt("textColour",1);
+        editor.putInt("cardColour",0);
+        editor.putInt("textColour",4);
         editor.putBoolean("firstAccess",false);
         editor.commit();
     }

@@ -128,4 +128,146 @@
         app:layout_constraintTop_toBottomOf="@+id/settingsBonusSwitch"
         android:layout_marginTop="20dp"
         android:layout_marginRight="50dp"/>
+
+    <TextView
+        android:id="@+id/settingsCardColourTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Card Background Colour"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsSoundSwitch"
+        android:layout_marginTop="20dp" />
+
+    <ImageButton
+        android:id="@+id/settingsCardColourWhite"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardColourTitle"
+        app:layout_constraintEnd_toStartOf="@id/settingsCardColourRed"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_white" />
+
+    <ImageButton
+        android:id="@+id/settingsCardColourRed"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/settingsCardColourWhite"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardColourTitle"
+        app:layout_constraintEnd_toStartOf="@id/settingsCardColourGreen"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_red" />
+
+    <ImageButton
+        android:id="@+id/settingsCardColourGreen"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/settingsCardColourRed"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardColourTitle"
+        app:layout_constraintEnd_toStartOf="@id/settingsCardColourBlue"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_green" />
+
+    <ImageButton
+        android:id="@+id/settingsCardColourBlue"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/settingsCardColourGreen"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardColourTitle"
+        app:layout_constraintEnd_toStartOf="@id/settingsCardColourBlack"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_blue" />
+
+    <ImageButton
+        android:id="@+id/settingsCardColourBlack"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/settingsCardColourBlue"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardColourTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_black" />
+
+    <TextView
+        android:id="@+id/settingsCardTextColourTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Card Text Colour"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsCardColourWhite"
+        android:layout_marginTop="20dp" />
+
+    <ImageButton
+        android:id="@+id/settingsCardTextColourWhite"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardTextColourTitle"
+        app:layout_constraintEnd_toStartOf="@id/settingsCardTextColourRed"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_white" />
+
+    <ImageButton
+        android:id="@+id/settingsCardTextColourRed"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/settingsCardTextColourWhite"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardTextColourTitle"
+        app:layout_constraintEnd_toStartOf="@id/settingsCardTextColourGreen"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_red" />
+
+    <ImageButton
+        android:id="@+id/settingsCardTextColourGreen"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/settingsCardTextColourRed"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardTextColourTitle"
+        app:layout_constraintEnd_toStartOf="@id/settingsCardTextColourBlue"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_green" />
+
+    <ImageButton
+        android:id="@+id/settingsCardTextColourBlue"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/settingsCardTextColourGreen"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardTextColourTitle"
+        app:layout_constraintEnd_toStartOf="@id/settingsCardTextColourBlack"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_blue" />
+
+    <ImageButton
+        android:id="@+id/settingsCardTextColourBlack"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/settingsCardTextColourBlue"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardTextColourTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/colour_black" />
+
+    <Button
+        android:id="@+id/settingsSaveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Settings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingsCardTextColourWhite"
+        android:layout_marginTop="20dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
