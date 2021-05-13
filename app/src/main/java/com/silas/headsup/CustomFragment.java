@@ -127,66 +127,68 @@ public class CustomFragment extends Fragment {
 
     public void generateTable(DataSnapshot dataSnapshot, String search, boolean sortByDownload, boolean sortByDate) {
         Map<String,Object> results = (Map<String, Object>) dataSnapshot.getValue();
-        TableLayout tableLayout = (TableLayout) getActivity().findViewById(R.id.customTableLayout);
-        allResultDecks.clear();
-        for(int i = 1;i < tableLayout.getChildCount();i++) {
-            View child = tableLayout.getChildAt(i);
-            if(child instanceof  TableRow) {
-                ((TableRow) child).removeAllViews();
-            }
-        }
-        if(results != null) {
-            for (Map.Entry<String, Object> entry : results.entrySet()) {
-                Map deck = (Map) entry.getValue();
-                String id = (String) deck.get("id");
-                String name = (String) deck.get("name");
-                if(matchTerm(search,name)) {
-                    if (name.length() > 20) {
-                        String beginning = name.substring(0, 20);
-                        String end = name.substring(20);
-                        name = beginning + "\n" + end;
-                    }
-                    String author = (String) deck.get("author");
-                    if (author.length() > 10) {
-                        String beginning = author.substring(0, 10);
-                        String end = author.substring(10);
-                        author = beginning + "\n" + end;
-                    }
-                    int downloads = (int) (long) deck.get("downloads");
-                    int size = (int) (long) deck.get("deckSize");
-                    int year = (int) (long) deck.get("timeYear");
-                    int day = (int) (long) deck.get("timeDay");
-                    ResultDeck resultDeck = new ResultDeck(id, name, author, downloads, size,year,day);
-                    allResultDecks.add(resultDeck);
+        if(getActivity() != null) {
+            TableLayout tableLayout = (TableLayout) getActivity().findViewById(R.id.customTableLayout);
+            allResultDecks.clear();
+            for (int i = 1; i < tableLayout.getChildCount(); i++) {
+                View child = tableLayout.getChildAt(i);
+                if (child instanceof TableRow) {
+                    ((TableRow) child).removeAllViews();
                 }
             }
-            if(sortByDownload) {
-                allResultDecks = this.sortByDownloads(allResultDecks);
-            } else if(sortByDate) {
-                allResultDecks = this.sortByDate(allResultDecks);
-            }
-            for (ResultDeck resultDeck : allResultDecks) {
-                TableRow tableRow = new TableRow(getContext());
-                tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                TextView nameView = new TextView(getContext());
-                TextView authorView = new TextView(getContext());
-                TextView sizeView = new TextView(getContext());
-                TextView downloadsView = new TextView(getContext());
-                nameView.setText(resultDeck.getName());
-                authorView.setText(resultDeck.getAuthor());
-                sizeView.setText(String.valueOf(resultDeck.getSize()));
-                downloadsView.setText(String.valueOf(resultDeck.getDownloads()));
-                tableRow.addView(nameView);
-                tableRow.addView(authorView);
-                tableRow.addView(sizeView);
-                tableRow.addView(downloadsView);
-                tableRow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onDeckSelectedToDownload(resultDeck);
+            if (results != null) {
+                for (Map.Entry<String, Object> entry : results.entrySet()) {
+                    Map deck = (Map) entry.getValue();
+                    String id = (String) deck.get("id");
+                    String name = (String) deck.get("name");
+                    if (matchTerm(search, name)) {
+                        if (name.length() > 20) {
+                            String beginning = name.substring(0, 20);
+                            String end = name.substring(20);
+                            name = beginning + "\n" + end;
+                        }
+                        String author = (String) deck.get("author");
+                        if (author.length() > 10) {
+                            String beginning = author.substring(0, 10);
+                            String end = author.substring(10);
+                            author = beginning + "\n" + end;
+                        }
+                        int downloads = (int) (long) deck.get("downloads");
+                        int size = (int) (long) deck.get("deckSize");
+                        int year = (int) (long) deck.get("timeYear");
+                        int day = (int) (long) deck.get("timeDay");
+                        ResultDeck resultDeck = new ResultDeck(id, name, author, downloads, size, year, day);
+                        allResultDecks.add(resultDeck);
                     }
-                });
-                tableLayout.addView(tableRow);
+                }
+                if (sortByDownload) {
+                    allResultDecks = this.sortByDownloads(allResultDecks);
+                } else if (sortByDate) {
+                    allResultDecks = this.sortByDate(allResultDecks);
+                }
+                for (ResultDeck resultDeck : allResultDecks) {
+                    TableRow tableRow = new TableRow(getContext());
+                    tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    TextView nameView = new TextView(getContext());
+                    TextView authorView = new TextView(getContext());
+                    TextView sizeView = new TextView(getContext());
+                    TextView downloadsView = new TextView(getContext());
+                    nameView.setText(resultDeck.getName());
+                    authorView.setText(resultDeck.getAuthor());
+                    sizeView.setText(String.valueOf(resultDeck.getSize()));
+                    downloadsView.setText(String.valueOf(resultDeck.getDownloads()));
+                    tableRow.addView(nameView);
+                    tableRow.addView(authorView);
+                    tableRow.addView(sizeView);
+                    tableRow.addView(downloadsView);
+                    tableRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onDeckSelectedToDownload(resultDeck);
+                        }
+                    });
+                    tableLayout.addView(tableRow);
+                }
             }
         }
     }

@@ -1,8 +1,9 @@
 package com.silas.headsup;
 //TODO:
 /*
-add new line to name/author in generateTable
-search database
+change card/text colour in game
+add sound effects
+do help screen
  */
 
 
