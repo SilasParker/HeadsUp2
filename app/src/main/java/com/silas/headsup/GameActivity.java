@@ -2,10 +2,12 @@ package com.silas.headsup;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.json.JSONException;
 
@@ -32,6 +35,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean initialGameStart, heldIncorrectly, gameInProgress, testCheck, postAnswer;
     private LinearLayout correctLinearLayout, incorrectLinearLayout;
     private Button gameResultBackBtn, gameResultReplayBtn;
+    private int cardColour, textColour;
 
     private int testTempScore;
     private ArrayList<String> correctList, skipList;
@@ -62,6 +66,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.postAnswer = false;
 
         this.testTempScore = 0;
+        applyColourPreferences();
 
     }
 
@@ -71,8 +76,62 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         sensorManager.registerListener(this,accSensor,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+
+
+    private void applyColourPreferences() {
+        int card = MainActivity.sharedPrefs.getInt("cardColour",0);
+        int text = MainActivity.sharedPrefs.getInt("textColour",4);
+        System.out.println("Card Colour: "+card+" Text Colour: "+text);
+        ConstraintLayout layout = findViewById(R.id.gameLayout);
+        switch (card) {
+            case 1:
+                this.cardColour = R.color.red;
+                break;
+            case 2:
+                this.cardColour = R.color.green;
+                break;
+            case 3:
+                this.cardColour = R.color.blue;
+                break;
+            case 4:
+                this.cardColour = R.color.black;
+                break;
+            default:
+                this.cardColour = R.color.white;
+        }
+        layout.setBackgroundColor(getColor(this.cardColour));
+
+
+        switch(text) {
+            case 0:
+                this.textColour = R.color.white;
+                break;
+            case 1:
+                this.textColour = R.color.red;
+                break;
+            case 2:
+                this.textColour = R.color.green;
+                break;
+            case 3:
+                this.textColour = R.color.blue;
+                break;
+            default:
+                this.textColour = R.color.black;
+        }
+        System.out.println(this.cardColour+" "+this.textColour);
+
+        cardName.setTextColor(getColor(this.textColour));
+        timerView.setTextColor(getColor(this.textColour));
+        scoreView.setTextColor(getColor(this.textColour));
+        countdownView.setTextColor(getColor(this.textColour));
+        gamePauseTextView.setTextColor(getColor(this.textColour));
+
+
+    }
+
+
     private void setGame(Deck deck, int timer, int difficulty) {
-        this.game = new com.silas.headsup.Game(deck, timer, difficulty);
+        this.game = new Game(deck, timer, difficulty);
         this.deck = game.getUsedDeck();
     }
 
@@ -162,6 +221,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
 
                 } else if(turnedToCorrect(x,y,z) && (timeNow-timeLastAnswered >= 1000) && !postAnswer) {
+                    MediaPlayer mp = MediaPlayer.create(this,R.raw.correct_tone);
+                    mp.start();
                     gamePauseTextView.setText("ANSWER CORRECT");
                     game.addToCorrect(currentCard);
                     game.incrementScore();
@@ -170,6 +231,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     timeLastAnswered = timeNow;
                     postAnswer = true;
                 } else if(turnedToSkip(x,y,z) && (timeNow-timeLastAnswered >= 1000) && !postAnswer) {
+                    MediaPlayer mp = MediaPlayer.create(this,R.raw.incorrect_tone);
+                    mp.start();
                     gamePauseTextView.setText("ANSWER SKIPPED");
                     game.addToIncorrect(currentCard);
                     currentCard = game.getCurrentCard();
@@ -191,9 +254,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 if(heldProperly(x,y,z)) {
                     if(timeLastHeldProperly != 0L) {
                         if(timeNow-timeLastHeldProperly >= 1000) {
-                            game.countdown();
+                            game.countdown(this);
                             countdownView.setText(String.valueOf(game.getCountdown()));
                             if(game.getCountdown() == 0 && !game.hasGameStarted()) {
+                                MediaPlayer mp = MediaPlayer.create(this,R.raw.start_tone_0);
+                                mp.start();
                                 readyToStart();
                                 this.heldIncorrectly = false;
                             } else {
@@ -218,6 +283,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
 
     private void generateResultsScreen() throws InterruptedException, IOException, JSONException {
+        MediaPlayer mp = MediaPlayer.create(this,R.raw.times_up);
+        mp.start();
         this.gameResultBackBtn = findViewById(R.id.gameResultBackButton);
         this.correctLinearLayout = findViewById(R.id.gameResultCorrectLinearLayout);
         this.incorrectLinearLayout = findViewById(R.id.gameResultIncorrectLinearLayout);
@@ -227,6 +294,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.gameResultHighScore = findViewById(R.id.gameResultHighScore);
         this.gameResultActualScore = findViewById(R.id.gameResultActualScore);
         this.gameResultHighScore.setVisibility(View.INVISIBLE);
+
+        getWindow().getDecorView().setBackgroundColor(getColor(this.cardColour));
+        this.gameResultDifficulty.setTextColor(getColor(this.textColour));
+        this.gameResultHighScore.setTextColor(getColor(this.textColour));
+        this.gameResultActualScore.setTextColor(getColor(this.textColour));
+
+
         this.gameResultBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,16 +342,20 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     private void incrementCorrectSkippedLists(boolean win) {
         TextView textView = new TextView(this);
+        textView.setTextColor(getColor(this.textColour));
         if(win) {
             testTempScore++;
             this.gameResultActualScore.setText(String.valueOf(testTempScore));
             textView.setText(correctList.remove(0));
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.correct_tone);
+            mp.start();
             correctLinearLayout.addView(textView);
 
 
         } else {
             textView.setText(skipList.remove(0));
-
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.incorrect_tone);
+            mp.start();
             incorrectLinearLayout.addView(textView);
         }
     }

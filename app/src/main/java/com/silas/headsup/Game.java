@@ -1,5 +1,8 @@
 package com.silas.headsup;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -81,8 +84,19 @@ public class Game {
         return this.currentCard;
     }
 
-    public void countdown() {
+    public void countdown(Context context) {
+        if(this.countdown == 3) {
+            MediaPlayer mp = MediaPlayer.create(context,R.raw.start_tone_1);
+            mp.start();
+        } else if(countdown == 2) {
+            MediaPlayer mp = MediaPlayer.create(context,R.raw.start_tone_2);
+            mp.start();
+        } else {
+            MediaPlayer mp = MediaPlayer.create(context,R.raw.start_tone_3);
+            mp.start();
+        }
         this.countdown--;
+
     }
 
     public int getCountdown() {

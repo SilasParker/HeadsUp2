@@ -1,7 +1,6 @@
 package com.silas.headsup;
 //TODO:
 /*
-change card/text colour in game
 add sound effects
 do help screen
  */
