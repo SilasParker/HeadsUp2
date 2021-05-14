@@ -1,8 +1,7 @@
 package com.silas.headsup;
 //TODO:
 /*
-add sound effects
-do help screen
+look at strings.xml
  */
 
 
