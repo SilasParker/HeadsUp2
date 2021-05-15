@@ -32,7 +32,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager sensorManager;
     private Sensor accSensor;
     private long timeLastHeldProperly, timeLastAnswered;
-    private boolean initialGameStart, heldIncorrectly, gameInProgress, testCheck, postAnswer;
+    private boolean initialGameStart, heldIncorrectly, gameInProgress, testCheck, postAnswer, soundEffects;
     private LinearLayout correctLinearLayout, incorrectLinearLayout;
     private Button gameResultBackBtn, gameResultReplayBtn;
     private int cardColour, textColour;
@@ -64,7 +64,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         this.testCheck = true;
         this.timeLastAnswered = 0L;
         this.postAnswer = false;
-
+        this.soundEffects = MainActivity.sharedPrefs.getBoolean("soundEffects",true);
         this.testTempScore = 0;
         applyColourPreferences();
 
@@ -221,8 +221,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
 
                 } else if(turnedToCorrect(x,y,z) && (timeNow-timeLastAnswered >= 1000) && !postAnswer) {
-                    MediaPlayer mp = MediaPlayer.create(this,R.raw.correct_tone);
-                    mp.start();
+                    if(soundEffects) {
+                        MediaPlayer mp = MediaPlayer.create(this, R.raw.correct_tone);
+                        mp.start();
+                    }
                     gamePauseTextView.setText("ANSWER CORRECT");
                     game.addToCorrect(currentCard);
                     game.incrementScore();
@@ -231,8 +233,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     timeLastAnswered = timeNow;
                     postAnswer = true;
                 } else if(turnedToSkip(x,y,z) && (timeNow-timeLastAnswered >= 1000) && !postAnswer) {
-                    MediaPlayer mp = MediaPlayer.create(this,R.raw.incorrect_tone);
-                    mp.start();
+                    if(soundEffects) {
+                        MediaPlayer mp = MediaPlayer.create(this, R.raw.incorrect_tone);
+                        mp.start();
+                    }
                     gamePauseTextView.setText("ANSWER SKIPPED");
                     game.addToIncorrect(currentCard);
                     currentCard = game.getCurrentCard();
@@ -257,8 +261,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                             game.countdown(this);
                             countdownView.setText(String.valueOf(game.getCountdown()));
                             if(game.getCountdown() == 0 && !game.hasGameStarted()) {
-                                MediaPlayer mp = MediaPlayer.create(this,R.raw.start_tone_0);
-                                mp.start();
+                                if(soundEffects) {
+                                    MediaPlayer mp = MediaPlayer.create(this, R.raw.start_tone_0);
+                                    mp.start();
+                                }
                                 readyToStart();
                                 this.heldIncorrectly = false;
                             } else {
@@ -283,8 +289,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
 
     private void generateResultsScreen() throws InterruptedException, IOException, JSONException {
-        MediaPlayer mp = MediaPlayer.create(this,R.raw.times_up);
-        mp.start();
+        if(soundEffects) {
+            MediaPlayer mp = MediaPlayer.create(this, R.raw.times_up);
+            mp.start();
+        }
         this.gameResultBackBtn = findViewById(R.id.gameResultBackButton);
         this.correctLinearLayout = findViewById(R.id.gameResultCorrectLinearLayout);
         this.incorrectLinearLayout = findViewById(R.id.gameResultIncorrectLinearLayout);
@@ -347,15 +355,19 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             testTempScore++;
             this.gameResultActualScore.setText(String.valueOf(testTempScore));
             textView.setText(correctList.remove(0));
-            MediaPlayer mp = MediaPlayer.create(this,R.raw.correct_tone);
-            mp.start();
+            if(soundEffects) {
+                MediaPlayer mp = MediaPlayer.create(this, R.raw.correct_tone);
+                mp.start();
+            }
             correctLinearLayout.addView(textView);
 
 
         } else {
             textView.setText(skipList.remove(0));
-            MediaPlayer mp = MediaPlayer.create(this,R.raw.incorrect_tone);
-            mp.start();
+            if(soundEffects) {
+                MediaPlayer mp = MediaPlayer.create(this, R.raw.incorrect_tone);
+                mp.start();
+            }
             incorrectLinearLayout.addView(textView);
         }
     }

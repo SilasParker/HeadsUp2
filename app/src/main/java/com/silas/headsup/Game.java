@@ -12,7 +12,7 @@ public class Game {
     private ArrayList<String> correct, incorrect, deckUsed;
     private ArrayList<Boolean> scoreOrder;
     private String currentCard;
-    private boolean paused, gameStarted;
+    private boolean paused, gameStarted, bonusTime, soundEffects;
 
     public Game(Deck deck, int timer, int difficulty) {
         this.deck = deck;
@@ -27,6 +27,8 @@ public class Game {
         this.gameStarted = false;
         this.countdown = 3;
         this.maxTimer = timer;
+        this.soundEffects = MainActivity.sharedPrefs.getBoolean("soundEffects",true);
+        this.bonusTime = MainActivity.sharedPrefs.getBoolean("bonusTime",false);
     }
 
     public String getDifficultyAsString() {
@@ -85,15 +87,17 @@ public class Game {
     }
 
     public void countdown(Context context) {
-        if(this.countdown == 3) {
-            MediaPlayer mp = MediaPlayer.create(context,R.raw.start_tone_1);
-            mp.start();
-        } else if(countdown == 2) {
-            MediaPlayer mp = MediaPlayer.create(context,R.raw.start_tone_2);
-            mp.start();
-        } else {
-            MediaPlayer mp = MediaPlayer.create(context,R.raw.start_tone_3);
-            mp.start();
+        if(soundEffects) {
+            if (this.countdown == 3) {
+                MediaPlayer mp = MediaPlayer.create(context, R.raw.start_tone_1);
+                mp.start();
+            } else if (countdown == 2) {
+                MediaPlayer mp = MediaPlayer.create(context, R.raw.start_tone_2);
+                mp.start();
+            } else {
+                MediaPlayer mp = MediaPlayer.create(context, R.raw.start_tone_3);
+                mp.start();
+            }
         }
         this.countdown--;
 
@@ -140,6 +144,9 @@ public class Game {
         correct.add(answer);
         scoreOrder.add(true);
         setNextCard();
+        if(this.bonusTime) {
+            this.timer += 3;
+        }
     }
 
     public void addToIncorrect(String answer) {

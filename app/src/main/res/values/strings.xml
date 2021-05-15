@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">FirebaseDBDemo</string>
-    <string name="how_to_play">1. Gather 1 or more friends\n
-        2. Check out the Settings Tab\n
-        3. When ready to begin, </string>
+    <string name="how_to_play"><br><b>1.</b> Gather 1 or more friends\n\n</br>
+        <br><b>2.</b> Check out the Settings Tab\n\n</br>
+        <br><b>3.</b> When ready to begin, select your deck of choice and click "Start"\n\n</br>
+        <br><b>4.</b> Hold phone landscape to your head to begin\n\n</br>
+        <br><b>5.</b> Your friends must describe what it says on the screen without using the words themselves\n\n</br>
+        <br><b>6.</b> You then must guess what it says on the screen\n\n</br>
+        <br><b>7.</b> If you get it right, tilt the phone forward to move on, if you want to skip, tilt the phone back\n\n</br>
+        <br><b>8.</b><i> Have fun! Make sure to try and beat your highscore!</i></br></string>
 </resources>

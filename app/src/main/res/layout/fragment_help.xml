@@ -32,13 +32,14 @@
 
     <TextView
         android:id="@+id/helpInstructionText"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="How To Play:"
+        android:textAlignment="center"
+        android:text="@string/how_to_play"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
-
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/helpInstructionTitle"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="30dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
