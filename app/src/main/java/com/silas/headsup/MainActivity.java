@@ -1,7 +1,7 @@
 package com.silas.headsup;
 //TODO:
 /*
-look at strings.xml
+make it so orientation is handled correctly
  */
 
 

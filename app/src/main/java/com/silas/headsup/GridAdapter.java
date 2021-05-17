@@ -129,7 +129,7 @@ public class GridAdapter extends BaseAdapter {
             }
         });
 
-        convertView.setBackgroundResource(R.color.teal_200);
+        convertView.setBackgroundResource(R.drawable.background_border);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -2,6 +2,8 @@ package com.silas.headsup;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
@@ -91,33 +93,52 @@ public class CreateDeckActivity extends AppCompatActivity {
             }
         });
 
-        this.easyCardEntry.setOnKeyListener(new View.OnKeyListener() {
+        this.easyCardEntry.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 String entered = easyCardEntry.getText().toString();
                 String[] lines = entered.split("\n");
                 easyCardCountView.setText("Total: "+String.valueOf(lines.length));
-                return false;
             }
-        });
-        this.mediumCardEntry.setOnKeyListener(new View.OnKeyListener() {
+
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                String entered = mediumCardEntry.getText().toString();
-                String[] lines = entered.split("\n");
-                mediumCardCountView.setText("Total: "+String.valueOf(lines.length));
-                return false;
-            }
-        });
-        this.hardCardEntry.setOnKeyListener(new View.OnKeyListener() {
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                String entered = hardCardEntry.getText().toString();
-                String[] lines = entered.split("\n");
-                hardCardCountView.setText("Total: "+String.valueOf(lines.length));
-                return false;
-            }
+            public void afterTextChanged(Editable s) { }
         });
+
+        this.mediumCardEntry.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                String entered = easyCardEntry.getText().toString();
+                String[] lines = entered.split("\n");
+                easyCardCountView.setText("Total: "+String.valueOf(lines.length));
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        this.hardCardEntry.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                String entered = easyCardEntry.getText().toString();
+                String[] lines = entered.split("\n");
+                easyCardCountView.setText("Total: "+String.valueOf(lines.length));
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+
 
 
     }

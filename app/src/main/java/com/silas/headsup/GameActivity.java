@@ -161,6 +161,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             float z = event.values[2];
 
 
+
             if(initialGameStart) {
                 this.cardName.setVisibility(View.VISIBLE);
                 cardName.setText(game.getCurrentCard());
@@ -186,7 +187,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    //finish game (out of cards), move onto score
                 }
                 if(heldProperly(x,y,z)) {
                     postAnswer = false;
@@ -373,27 +373,36 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private boolean turnedToCorrect(float x, float y, float z) {
-        if(z < -7.5) {
+        if(z < -7.5 && x > -3 && x < 3) {
             //(x > 5 && x < 7) && (y > -1 && y < 1) && (z < -7.5)
+            //z < -7.5
+            //z < -7.5 && x > 9 && x < 10
+            //z < -7.5 && x > -1 && x < 1
             return true;
         }
         return false;
     }
 
     private boolean turnedToSkip(float x, float y, float z) {
-        if(z > 7.5) {
+        if(z > 7.5 && x > -3 && x < 3) {
             //(x > -1 && x < 6) && (y > -1 && y < 1) && (z > 7.5)
-
+            //z > 7.5
+            //z > 7.5 && x > 9 && x < 10
+            //z > 7.5 && x > -1 && x < 1
             return true;
         }
         return false;
     }
 
     private boolean heldProperly(float x, float y, float z) {
-        if(z > -7.5 && z < 7.5) {
+        if(z > -7.5 && z < 7.5 && x > 9 && x < 10) {
             //(x > 4.5 && x < 11) && (y > -5 && y < 5) && (z > -7.5 && z < 7.5)
+            // z > -7.5 && z < 7.5
+            //z > -7.5 && z < 7.5 && x > 9 && x < 10
+            System.out.println("Held Properly: "+x+" "+y+" "+z);
             return true;
         }
+        System.out.println("Held Improperly: "+x+" "+y+" "+z);
         return false;
     }
 
