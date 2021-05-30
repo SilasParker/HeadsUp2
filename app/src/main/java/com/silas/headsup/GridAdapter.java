@@ -17,34 +17,24 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+//Custom Adapter for the Deck Grid used in the All and Favourite Decks Screens
 public class GridAdapter extends BaseAdapter {
     private ArrayList<Deck> decks;
     private Fragment parentFragment;
     private Context context;
     private LayoutInflater inflater;
 
-
+    //Constructor for this GridAdapter
+    //c: Context to create the GridAdapter under
+    //decks: Decks to inflate the Grid with
+    //fragment: Fragment that this GridAdapter
     GridAdapter(Context c, ArrayList decks, Fragment fragment) {
         this.context = c;
         this.decks = decks;
         this.parentFragment = fragment;
     }
 
-    @Override
-    public int getCount() {
-        return decks.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return decks.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
+    //Generates and retrieves a View representing a Deck to inflate the Grid with
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(inflater == null) {
@@ -56,7 +46,6 @@ public class GridAdapter extends BaseAdapter {
         if(!decks.get(position).isCustom()) {
             convertView.findViewById(R.id.delete).setVisibility(View.GONE);
         }
-
         TextView deckNameView = convertView.findViewById(R.id.deck_name);
         ImageView iconView = convertView.findViewById(R.id.icon);
         String deckName = decks.get(position).getName();
@@ -66,9 +55,6 @@ public class GridAdapter extends BaseAdapter {
         deckNameView.setText(deckName);
         iconView.setImageResource(decks.get(position).getIconId());
         ImageView favouriteView = convertView.findViewById(R.id.favourite_star);
-
-
-
         if(decks.get(position).isFavourite()) {
             favouriteView.setImageResource(R.drawable.ic_baseline_star_24);
         } else {
@@ -78,32 +64,28 @@ public class GridAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-
                 try {
                     if(parentFragment instanceof AllDecksFragment) {
                         toggleFavouriteOnDeck(position,false);
                         AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
                         allDecksFragment.updateGrid(R.id.allDecksGrid);
-                    } else if(parentFragment instanceof com.silas.headsup.FavouritesFragment) {
-
+                    } else if(parentFragment instanceof FavouritesFragment) {
                         toggleFavouriteOnDeck(position,true);
-                        com.silas.headsup.FavouritesFragment favouritesFragment = (com.silas.headsup.FavouritesFragment) parentFragment;
+                        FavouritesFragment favouritesFragment = (FavouritesFragment) parentFragment;
                         favouritesFragment.updateGrid(R.id.favouritesGrid);
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         });
         TextView highScoreView = convertView.findViewById(R.id.highscore);
         highScoreView.setText(String.valueOf(decks.get(position).getHighScore()));
-
         TextView deleteView = convertView.findViewById(R.id.delete);
         deleteView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alertDiaBuilder = new AlertDialog.Builder(v.getContext());
@@ -113,10 +95,9 @@ public class GridAdapter extends BaseAdapter {
                         .setMessage("Are you sure you want to delete this deck? Cannot be undone")
                         .setIcon(R.drawable.ic_baseline_warning_amber_24)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
-
                                 if(parentFragment instanceof AllDecksFragment) {
                                     removeDeck(position,false);
                                     AllDecksFragment allDecksFragment = (AllDecksFragment) parentFragment;
@@ -128,12 +109,11 @@ public class GridAdapter extends BaseAdapter {
                                 }
                             }
                         }).show();
-
             }
         });
-
         convertView.setBackgroundResource(R.drawable.background_border);
         convertView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if(parentFragment instanceof AllDecksFragment) {
@@ -145,25 +125,39 @@ public class GridAdapter extends BaseAdapter {
                 }
             }
 
-
-
-
         });
         return convertView;
     }
 
+    //Retrieves the size of the specified Deck
+    @Override
+    public int getCount() {
+        return decks.size();
+    }
+
+    //Retrieves the Deck of the index specified
+    @Override
+    public Object getItem(int position) {
+        return decks.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    //Toggles the favourite status of the indexed Deck
+    //position: Index of the Deck to toggle
+    //favFragment: Whether the fragment that this took place in was a FavouritesFragment instance or not
+    private void toggleFavouriteOnDeck(int position, boolean favFragment) throws IOException, JSONException {
+        MainActivity.deckList.toggleDeckFavourite(position,context,favFragment);
+    }
+
+    //Removes the specified Deck
+    //position: Index of Deck to remove
+    //favFragment: Whether the fragment that this took place in was a FavouritesFragment instance or not
     private void removeDeck(int position, boolean favFragment) {
         MainActivity.deckList.remove(position,favFragment);
     }
-
-    private void toggleFavouriteOnDeck(int position, boolean favFragment) throws IOException, JSONException {
-        MainActivity.deckList.toggleDeckFavourite(position, context,favFragment);
-
-    }
-
-
-
-
-
 
 }

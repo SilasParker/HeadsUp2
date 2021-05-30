@@ -13,16 +13,40 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
+//Fragment Class for the All Decks Tab
 public class AllDecksFragment extends DeckLayoutFragment {
 
-
-
+    //During onCreateView in the Fragment lifecycle, inflates this fragment's layout
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_all_decks,container,false);
     }
 
+    //During onActivityCreated in the Fragment lifecycle, the grid is updated
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        updateGrid(R.id.allDecksGrid);
+    }
+
+    //During onResume in the Fragment lifecycle, the grid is updated
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateGrid(R.id.allDecksGrid);
+    }
+
+    //During onViewCreated in the Fragment lifecycle, the grid is updated and search bar is initialised
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        updateGrid(R.id.allDecksGrid);
+        this.setSearchView(getActivity().findViewById(R.id.allDecksSearch));
+        this.getSearchView().setOnQueryTextListener(new DeckSearchOnQueryTextListener(this.getDeckList(),this));
+    }
+
+    //Updates the Deck grid
+    //gridId: GridView Id to update
     @Override
     public void updateGrid(int gridId) {
         try {
@@ -40,22 +64,4 @@ public class AllDecksFragment extends DeckLayoutFragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateGrid(R.id.allDecksGrid);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        updateGrid(R.id.allDecksGrid);
-        this.setSearchView(getActivity().findViewById(R.id.allDecksSearch));
-        this.getSearchView().setOnQueryTextListener(new DeckSearchOnQueryTextListener(this.getDeckList(),this));
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        updateGrid(R.id.allDecksGrid);
-    }
 }

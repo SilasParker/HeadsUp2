@@ -1,6 +1,5 @@
 package com.silas.headsup;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,18 +25,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-{
+//Main Activity Class for the entire application. This is initialised upon startup
+public class MainActivity extends AppCompatActivity {
+
     public static DeckList deckList;
     public static SharedPreferences sharedPrefs;
 
-
+    //During onCreate in the Activity lifecycle, the app is initialised
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         sharedPrefs = getSharedPreferences("headsUpPrefs", Context.MODE_PRIVATE);
         if(!sharedPrefs.contains("firstAccess")) {
             try {
@@ -48,68 +47,23 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         }
-
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new AllDecksFragment()).commit();
         deckList = new DeckList(getApplicationContext());
-
-
-
         try {
             this.deckList.setAllDecks(getAllStoredDecks());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-
         }
-
-
-
     }
 
-    public static ArrayList<Deck> searchDeck(String search, DeckList deckListToSearch) {
-        search = search.toLowerCase();
-        ArrayList<Deck> decksSearched = new ArrayList<>();
-        ArrayList<Deck> tempDecksSearched = new ArrayList<>();
-
-        if(deckListToSearch != null) {
-            decksSearched.addAll(deckListToSearch.getAllDecks());
-            tempDecksSearched.addAll(decksSearched);
-            boolean noMatchesFirstChar = true;
-            if (search.length() == 0) {
-                return decksSearched;
-            }
-            for (int i = 0; i < search.length(); i++) {
-                char searchedChar = search.charAt(i);
-                for (Deck deck : decksSearched) {
-                    if(deck.getName().length() == i) {
-                        tempDecksSearched.remove(deck);
-                    } else if (deck.getName().toLowerCase().charAt(i) != searchedChar) {
-                        tempDecksSearched.remove(deck);
-                    }
-                }
-
-                if (tempDecksSearched.size() == 0 && !noMatchesFirstChar) {
-                    return decksSearched;
-                } else if (tempDecksSearched.size() == 0 && noMatchesFirstChar) {
-                    return tempDecksSearched;
-                } else {
-                    decksSearched = tempDecksSearched;
-                }
-            }
-            return decksSearched;
-
-        }
-        return new ArrayList<Deck>();
-    }
-
-
-
-
-
+    //Initialises the bottom navigation bar menu
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        //Upon a navigation item selected, the chosen fragment is displayed
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectFrag = null;
@@ -135,16 +89,31 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectFrag).commit();
             return true;
         }
+
     };
 
+    //Initialises the app for it's first time running, sets the default settings and sets up one default Deck
+    private void setUpAppForFirstRun() throws IOException, JSONException {
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putFloat("timer",120f);
+        editor.putInt("difficulty",2);
+        editor.putBoolean("bonusTime",false);
+        editor.putBoolean("soundEffects",true);
+        editor.putInt("cardColour",0);
+        editor.putInt("textColour",4);
+        editor.putBoolean("firstAccess",false);
+        editor.commit();
+        Deck defaultDeck = new Deck("Best Lecturers","The best lecturers at Brighton University","Silas Parker",new String[] {"Khuong"},new String[] {"Dr. Nguyen"}, new String[] {"Khuong Nguyen"}, 4, false, 0, false);
+        defaultDeck.saveJsonToFile(this,true);
+    }
 
+    //Retrieves and converts all locally stored Jsons into Decks
+    //Returns: All converted Decks
     public ArrayList<Deck> getAllStoredDecks() throws IOException, JSONException {
         ArrayList<Deck> allDecks = new ArrayList<>();
         ArrayList<Deck> favDecks = new ArrayList<>();
         File directory = new File(String.valueOf(this.getApplicationContext().getFilesDir()));
         for(File file : directory.listFiles()) {
-            System.out.println("FILE: "+file);
-            String error = "";
             if(file.isFile() && file.getPath().endsWith(".json")) {
                 FileReader fileReader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -178,7 +147,6 @@ public class MainActivity extends AppCompatActivity
                     }
                     if(name == null || description == null || author == null || easyJson == null || mediumJson == null || hardJson == null) {
                         validJson = false;
-                        error += "One of these is null: name, desc, author, easyJson, mediumJson, hardJson\n";
                     }
                     if(validJson) {
                         String[] easy = jsonStringArrayToRegularStringArray(easyJson);
@@ -186,9 +154,6 @@ public class MainActivity extends AppCompatActivity
                         String[] hard = jsonStringArrayToRegularStringArray(hardJson);
                         if(icon > 100) {
                             switch(icon) {
-                                case 2131165317:
-                                    icon = 0;
-                                    break;
                                 case 2131165324:
                                     icon = 1;
                                     break;
@@ -222,8 +187,6 @@ public class MainActivity extends AppCompatActivity
                         }
                         if(name.length() > 35 || description.length() > 200 || author.length() > 20 || easy.length == 0 || icon > 9 || highscore < 0 || highscore > 999 || icon < 0) {
                             validJson = false;
-                            error += "Either the name was too long, desc too long, author too long, easy has 0 entries, icon is too high, highscore is too low or high\n";
-                            System.out.println(name.length()+" "+description.length()+" "+author.length()+" "+easy.length+" "+icon+" "+highscore);
                         }
                         if(validJson) {
                             Deck newDeck = new Deck(name,description,author,easy,medium,hard,icon,custom,highscore,favourite);
@@ -233,12 +196,10 @@ public class MainActivity extends AppCompatActivity
                             }
                         } else {
                             file.delete();
-                            System.out.println(error);
                             Toast.makeText(this,"Invalid Deck Found and Deleted",Toast.LENGTH_LONG).show();
                         }
                     } else {
                         file.delete();
-                        System.out.println(error);
                         Toast.makeText(this,"Invalid Deck Found and Deleted",Toast.LENGTH_LONG).show();
                     }
                 }
@@ -247,6 +208,9 @@ public class MainActivity extends AppCompatActivity
         return allDecks;
     }
 
+    //Converts a JsonArray of Strings into a regular string array
+    //array: The JsonArray to convert
+    //Returns: The converted String array
     private String[] jsonStringArrayToRegularStringArray(JSONArray array) throws JSONException {
         String[] arrayToReturn = new String[array.length()];
         for(int i = 0;i < array.length();i++) {
@@ -255,56 +219,41 @@ public class MainActivity extends AppCompatActivity
         return arrayToReturn;
     }
 
-    private void setUpAppForFirstRun() throws IOException, JSONException {
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putFloat("timer",120f);
-        editor.putInt("difficulty",2);
-        editor.putBoolean("bonusTime",false);
-        editor.putBoolean("soundEffects",true);
-        editor.putInt("cardColour",0);
-        editor.putInt("textColour",4);
-        editor.putBoolean("firstAccess",false);
-        editor.commit();
-        Deck defaultDeck = new Deck("Best Lecturers","The best lecturers at Brighton University","Silas Parker",new String[] {"Khuong"},new String[] {"Dr. Nguyen"}, new String[] {"Khuong Nguyen"}, 4, false, 0, false);
-        defaultDeck.saveJsonToFile(this,true);
+    //Retrieves all Decks that names match the search query from the provided DeckList
+    //search: Search query string
+    //deckListToSearch: The DeckList being searched
+    //Returns: An ArrayList of Decks that matched the search
+    public static ArrayList<Deck> searchDeck(String search, DeckList deckListToSearch) {
+        search = search.toLowerCase();
+        ArrayList<Deck> decksSearched = new ArrayList<>();
+        ArrayList<Deck> tempDecksSearched = new ArrayList<>();
+        if(deckListToSearch != null) {
+            decksSearched.addAll(deckListToSearch.getAllDecks());
+            tempDecksSearched.addAll(decksSearched);
+            boolean noMatchesFirstChar = true;
+            if (search.length() == 0) {
+                return decksSearched;
+            }
+            for (int i = 0; i < search.length(); i++) {
+                char searchedChar = search.charAt(i);
+                for (Deck deck : decksSearched) {
+                    if(deck.getName().length() == i) {
+                        tempDecksSearched.remove(deck);
+                    } else if (deck.getName().toLowerCase().charAt(i) != searchedChar) {
+                        tempDecksSearched.remove(deck);
+                    }
+                }
+                if (tempDecksSearched.size() == 0 && !noMatchesFirstChar) {
+                    return decksSearched;
+                } else if (tempDecksSearched.size() == 0 && noMatchesFirstChar) {
+                    return tempDecksSearched;
+                } else {
+                    decksSearched = tempDecksSearched;
+                }
+            }
+            return decksSearched;
+        }
+        return new ArrayList<Deck>();
     }
-
-    private void test() throws IOException, JSONException {
-        Deck deck = new Deck("Smash","It's a smash game...","Silas",new String[]{"Peach","Bayonetta","Meta Knight"}, new String[]{"Fox","Kirby"},new String[]{"Pikachu"},1,true,0,true);
-        deckList.addLiteralDeck(deck);
-        Deck deck2 = new Deck("Harry Potter","Abra kadabra","Alex",new String[]{"Harry Potter","Ronald Weasley","Hermione Granger"},new String[]{"Luna Lovegood","Neville Longbottom"},new String[]{"Albus Dumbledore"},2,true,0,false);
-        deckList.addLiteralDeck(deck2);
-    }
-
-    /*
-    FirebaseDatabase root;
-    DatabaseReference reference;
-
-    EditText name, phone, email;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        name = findViewById(R.id.editName);
-        phone = findViewById(R.id.editPhone);
-        email = findViewById(R.id.editEmail);
-    }
-
-
-    public void onSubmit(View view)
-    {
-        Student student = new Student(name.getText().toString(),phone.getText().toString(),email.getText().toString());
-
-
-        root = FirebaseDatabase.getInstance();
-        reference = root.getReference("student");
-        System.out.println(reference);
-        reference.setValue(student);
-
-    }
-*/
 
 }

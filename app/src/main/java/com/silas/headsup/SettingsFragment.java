@@ -1,8 +1,5 @@
 package com.silas.headsup;
 
-
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -15,25 +12,26 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.material.slider.Slider;
 
+//Fragment Class for the Settings Tab
 public class SettingsFragment extends Fragment {
+
     private int selectedCardColour, selectedCardTextColour;
 
+    //During onCreateView in the Fragment lifecycle, inflates this fragment's layout
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_settings,container,false);
     }
 
+    //During onResume in the Fragment lifecycle, initialise the settings form
     @Override
     public void onResume() {
-
         super.onResume();
         initialiseSettings();
         setColourOnClick(getActivity().findViewById(R.id.settingsCardColourWhite),true,0);
@@ -47,27 +45,20 @@ public class SettingsFragment extends Fragment {
         setColourOnClick(getActivity().findViewById(R.id.settingsCardTextColourBlue),false,3);
         setColourOnClick(getActivity().findViewById(R.id.settingsCardTextColourBlack),false,4);
         getActivity().findViewById(R.id.settingsSaveButton).setOnClickListener(new View.OnClickListener() {
+
+            //Save button saves the form's details in the SharedPreferences
             @Override
             public void onClick(View v) {
                 savePrefs();
             }
+
         });
     }
 
-    private void setColourOnClick(ImageButton imgBut, boolean background, int colour) {
-        imgBut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                highlightColour(background,colour);
-            }
-        });
-    }
-
+    //Initialises the form
     private void initialiseSettings() {
         float timer = MainActivity.sharedPrefs.getFloat("timer",120f);
         ((Slider) getActivity().findViewById(R.id.settingsTimerSlider)).setValue(timer);
-
-        RadioGroup radGroup = (RadioGroup) getActivity().findViewById(R.id.settingsDifficultyRadioGroup);
         RadioButton radBut;
         switch(MainActivity.sharedPrefs.getInt("difficulty",2)) {
             case 1:
@@ -81,53 +72,17 @@ public class SettingsFragment extends Fragment {
                 break;
         }
         radBut.toggle();
-
         boolean bonusTime = MainActivity.sharedPrefs.getBoolean("bonusTime",false);
         ((Switch) getActivity().findViewById(R.id.settingsBonusSwitch)).setChecked(bonusTime);
-
         boolean soundEffects = MainActivity.sharedPrefs.getBoolean("soundEffects",true);
         ((Switch) getActivity().findViewById(R.id.settingsSoundSwitch)).setChecked(soundEffects);
-
-        ImageButton imageBut;
-        switch (MainActivity.sharedPrefs.getInt("cardColour",0)) {
-            case 1:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardColourRed);
-                break;
-            case 2:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardColourGreen);
-                break;
-            case 3:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardColourBlue);
-                break;
-            case 4:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardColourBlack);
-                break;
-            default:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardColourWhite);
-                break;
-        }
         highlightColour(true,MainActivity.sharedPrefs.getInt("cardColour",0));
-
-        switch(MainActivity.sharedPrefs.getInt("textColour",0)) {
-            case 1:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardTextColourRed);
-                break;
-            case 2:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardTextColourGreen);
-                break;
-            case 3:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardTextColourBlue);
-                break;
-            case 4:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardTextColourBlack);
-                break;
-            default:
-                imageBut = (ImageButton) getActivity().findViewById(R.id.settingsCardTextColourWhite);
-                break;
-        }
         highlightColour(false,MainActivity.sharedPrefs.getInt("textColour",0));
     }
 
+    //Highlights a colour selected by the user
+    //background: whether the colour saved is for the background or text
+    //colour: The colour being highlighted
     private void highlightColour(boolean background,int colour) {
         ImageButton[] buttons = new ImageButton[5];
         if(background) {
@@ -154,15 +109,27 @@ public class SettingsFragment extends Fragment {
                 }
             } else {
                 imageButDrawable.setStroke(4, Color.parseColor("#000000"));
-
             }
         }
     }
 
+    //Sets each colours on click function
+    private void setColourOnClick(ImageButton imgBut, boolean background, int colour) {
+        imgBut.setOnClickListener(new View.OnClickListener() {
+
+            //When a colour is selected, it is highlighted
+            @Override
+            public void onClick(View v) {
+                highlightColour(background,colour);
+            }
+
+        });
+    }
+
+    //Saves the form to SharedPreferences
     private void savePrefs() {
         Slider slider = getActivity().findViewById(R.id.settingsTimerSlider);
         float timer = slider.getValue();
-
         RadioGroup radGroup = getActivity().findViewById(R.id.settingsDifficultyRadioGroup);
         RadioButton radBut = getActivity().findViewById(radGroup.getCheckedRadioButtonId());
         String difficultyStr = (String) radBut.getText();
@@ -172,20 +139,17 @@ public class SettingsFragment extends Fragment {
         } else if(difficultyStr.equals("HARD")) {
             difficulty = 3;
         }
-
         boolean bonus = ((Switch) getActivity().findViewById(R.id.settingsBonusSwitch)).isChecked();
-
         boolean sound = ((Switch) getActivity().findViewById(R.id.settingsSoundSwitch)).isChecked();
-
         SharedPreferences.Editor editor = MainActivity.sharedPrefs.edit();
         editor.putFloat("timer",timer);
         editor.putInt("difficulty",difficulty);
         editor.putBoolean("bonusTime",bonus);
         editor.putBoolean("soundEffects",sound);
-        System.out.println("SET: "+this.selectedCardColour+" "+this.selectedCardTextColour);
         editor.putInt("textColour",this.selectedCardTextColour);
         editor.putInt("cardColour",this.selectedCardColour);
         editor.commit();
         Toast.makeText(getContext(),"Settings Saved",Toast.LENGTH_SHORT).show();
     }
+
 }

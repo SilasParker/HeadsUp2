@@ -30,7 +30,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+//Activity Class for the Create Deck Screen
 public class CreateDeckActivity extends AppCompatActivity {
+
     private EditText deckNameEntry, authorNameEntry, descriptionEntry, easyCardEntry, mediumCardEntry, hardCardEntry;
     private TextView easyCardCountView, mediumCardCountView, hardCardCountView, totalCardsView;
     private Spinner iconSpinner;
@@ -39,6 +41,7 @@ public class CreateDeckActivity extends AppCompatActivity {
     private Button submit;
     private int easyCardCount = 0, mediumCardCount = 0, hardCardCount = 0;
 
+    //During onCreate in the Activity lifecycle, the form to create the deck is initialised
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +59,6 @@ public class CreateDeckActivity extends AppCompatActivity {
         this.mediumCardCountView = findViewById(R.id.customCreateMediumTotal);
         this.hardCardCountView = findViewById(R.id.customCreateHardTotal);
         this.totalCardsView = findViewById(R.id.customCreateTotalCards);
-
         ArrayList<Integer> iconsList = new ArrayList<>();
         iconsList.add(R.drawable.ic_baseline_computer_24);
         iconsList.add(R.drawable.ic_baseline_map_24);
@@ -68,20 +70,19 @@ public class CreateDeckActivity extends AppCompatActivity {
         iconsList.add(R.drawable.ic_baseline_sports_esports_24);
         iconsList.add(R.drawable.ic_baseline_sports_soccer_24);
         iconsList.add(R.drawable.ic_baseline_tv_24);
-
         this.iconSpinner = findViewById(R.id.customCreateSpinner);
         SpinnerImageAdapter adapter = new SpinnerImageAdapter(this,R.layout.icon_selector_row,0,iconsList);
         iconSpinner.setAdapter(adapter);
-
-
-
         this.exitButton.setOnClickListener(new View.OnClickListener() {
+
+            //When exit button is clicked, this Activity is ended
             @Override
-            public void onClick(View v) {
-                finish();
-            }
+            public void onClick(View v) { finish(); }
+
         });
         this.submit.setOnClickListener(new View.OnClickListener() {
+
+            //When submit button is pressed, Deck is created
             @Override
             public void onClick(View v) {
                 try {
@@ -92,14 +93,14 @@ public class CreateDeckActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
         });
-
         this.easyCardEntry.addTextChangedListener(new TextWatcher() {
+
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
-            }
-
+            //When something is typed in the easy cards text box, update the counters
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String entered = easyCardEntry.getText().toString();
@@ -114,21 +115,20 @@ public class CreateDeckActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) { }
+
         });
-
         this.mediumCardEntry.addTextChangedListener(new TextWatcher() {
+
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
-            }
-
+            //When something is typed in the medium cards text box, update the counters
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String entered = mediumCardEntry.getText().toString();
                 String[] lines = new String[0];
                 if(!entered.equals("")) {
                     lines = entered.split("\n");
-
                 }
                 mediumCardCount = lines.length;
                 mediumCardCountView.setText("Total: " + String.valueOf(lines.length));
@@ -137,20 +137,20 @@ public class CreateDeckActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) { }
+
         });
-
         this.hardCardEntry.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            //When something is typed in the hard cards text box, update the counters
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String entered = hardCardEntry.getText().toString();
                 String[] lines = new String[0];
                 if(!entered.equals("")) {
                     lines = entered.split("\n");
-
                 }
                 hardCardCount = lines.length;
                 hardCardCountView.setText("Total: " + String.valueOf(lines.length));
@@ -159,13 +159,11 @@ public class CreateDeckActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) { }
+
         });
-
-
-
-
     }
 
+    //Attempts to create the deck, save it locally, and upload it to the database
     private void createDeck() throws IOException, JSONException {
         boolean validDeck = true;
         String deckName = "",authorName = "",description = "",error = "";
@@ -191,12 +189,10 @@ public class CreateDeckActivity extends AppCompatActivity {
         easyCards = this.easyCardEntry.getText().toString().split("\n");
         mediumCards = this.mediumCardEntry.getText().toString().split("\n");
         hardCards = this.hardCardEntry.getText().toString().split("\n");
-        System.out.println("CARDS: "+easyCards.length);
         if(easyCards.length == 0 || (easyCards.length == 1 && easyCards[0].equals(""))) {
             validDeck = false;
             error += "Decks require at least 1 easy card";
         }
-
         if(validDeck) {
             Deck deck = new Deck(deckName,description,authorName,easyCards,mediumCards,hardCards,iconSpinner.getSelectedItemPosition(),true,0,false);
             deck.saveJsonToFile(this,true);
@@ -223,6 +219,5 @@ public class CreateDeckActivity extends AppCompatActivity {
                     .setIcon(R.drawable.ic_baseline_warning_amber_24).show();
         }
     }
-
 
 }

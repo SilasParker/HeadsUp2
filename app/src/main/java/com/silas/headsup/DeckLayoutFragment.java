@@ -20,55 +20,56 @@ import com.google.android.material.slider.Slider;
 
 import java.util.ArrayList;
 
+//Fragment class to act as a super class for the AllDecksFragment and FavouritesFragment for code efficiency
 public class DeckLayoutFragment extends Fragment {
+
     private GridView grid;
     private GridAdapter adapter;
     private DeckList deckList;
     private SearchView searchView;
 
-    public void setAllDecks(DeckList deckList) {
-        this.deckList = deckList;
-    }
-
-    public DeckList getDeckList() {
-        return this.deckList;
-    }
-
+    //Getter for this fragment's GridView
     public GridView getGridView() {
         return this.grid;
     }
 
+    //Getter for this fragment's GridAdapter
     public GridAdapter getGridAdapter() {
         return this.adapter;
     }
 
+    //Getter for this fragment's DeckList
+    public DeckList getDeckList() {
+        return this.deckList;
+    }
+
+    //Getter for this fragment's SearchView
     public SearchView getSearchView() {
         return this.searchView;
     }
 
+    //Setter for this fragment's GridView
     public void setGridView(GridView grid) {
         this.grid = grid;
     }
 
+    //Setter for this fragment's GridAdapter
     public void setGridAdapter(GridAdapter adapter) {
         this.adapter = adapter;
     }
 
+    //Setter for this fragment's DeckList
+    public void setAllDecks(DeckList deckList) {
+        this.deckList = deckList;
+    }
+
+    //Setter for this fragment's SearchView
     public void setSearchView(SearchView searchView) {
         this.searchView = searchView;
     }
 
-    public void displaySearchResults(ArrayList<Deck> tempDeckList) {
-        GridAdapter tempAdapter = new GridAdapter(getContext(),tempDeckList,this);
-        if(this.grid != null) {
-            this.grid.setAdapter(tempAdapter);
-        }
-    }
-
-    public void updateGrid(int gridId) {
-        System.out.println("OVERRIDE ME");
-    }
-
+    //Displays a popup for the Deck selected
+    //deckSelected: The index of the Deck being displayed
     public void onDeckSelectedToPlay(int deckSelected) {
         View view = getView();
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -97,16 +98,14 @@ public class DeckLayoutFragment extends Fragment {
         }
         radBut.toggle();
         Button startBtn = (Button) popupView.findViewById(R.id.startGameStartButton);
-
         final PopupWindow popUp = new PopupWindow(popupView,width,height, true);
-
         startBtn.setOnClickListener(new View.OnClickListener() {
 
+            //When start button is pressed, start the Game with the set settings
             @Override
             public void onClick(View v) {
                 RadioButton selectedRadBut = popupView.findViewById(radGroup.getCheckedRadioButtonId());
                 String difficultyStr = (String) selectedRadBut.getText();
-
                 int difficulty = 0;
                 if(difficultyStr.equals("MEDIUM")) {
                     difficulty = 1;
@@ -121,19 +120,32 @@ public class DeckLayoutFragment extends Fragment {
                 startActivity(intent);
                 popUp.dismiss();
             }
+
         });
-
-
-
         TextView closeButton = (TextView) popupView.findViewById(R.id.startGameExitDeckButton);
         closeButton.setOnClickListener(new View.OnClickListener() {
 
+            //When the close button is pressed, dismiss the popup
             @Override
             public void onClick(View v) {
                 popUp.dismiss();
             }
+
         });
         popUp.showAtLocation(view, Gravity.CENTER,0,0);
-
     }
+
+    //Starts the process of displaying the search results within the GridView
+    public void displaySearchResults(ArrayList<Deck> tempDeckList) {
+        GridAdapter tempAdapter = new GridAdapter(getContext(),tempDeckList,this);
+        if(this.grid != null) {
+            this.grid.setAdapter(tempAdapter);
+        }
+    }
+
+    //Function to be overwritten to update the GridView
+    public void updateGrid(int gridId) {
+        System.out.println("OVERRIDE ME");
+    }
+
 }

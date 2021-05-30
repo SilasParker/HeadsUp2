@@ -1,7 +1,5 @@
 package com.silas.headsup;
 
-
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.text.LineBreaker;
@@ -40,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+//Fragment Class for the Custom Decks tab
 public class CustomFragment extends Fragment {
 
     private ArrayList<ResultDeck> allResultDecks;
@@ -49,40 +48,48 @@ public class CustomFragment extends Fragment {
     private SearchView searchView;
     private DataSnapshot tempSnapShot;
 
+    //During onCreateView in the Fragment lifecycle, inflates this fragment's layout
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_custom,container,false);
-
-
     }
 
+    //During onResume in the Fragment lifecycle, the layout is initialised
     @Override
     public void onResume() {
         super.onResume();
         this.database = FirebaseDatabase.getInstance();
         createDeckBtn = getView().findViewById(R.id.customFloatingAdd);
         createDeckBtn.setOnClickListener(new View.OnClickListener() {
+
+            //When the create button floating button is pressed, start the Create Deck Activity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),CreateDeckActivity.class);
                 startActivity(intent);
             }
+
         });
         this.sortDownloadBtn = getView().findViewById(R.id.customFloatingDownload);
         sortDownloadBtn.setOnClickListener(new View.OnClickListener() {
+
+            //When the Sort by Download Button is pressed, sort the Decks by number of downloads
             @Override
             public void onClick(View v) {
                 generateTable(tempSnapShot,"",true,false);
             }
+
         });
         this.sortDateBtn = getView().findViewById(R.id.customFloatingDate);
         sortDateBtn.setOnClickListener(new View.OnClickListener() {
+
+            //When the Sort by Date Button is pressed, sort the Decks by date
             @Override
             public void onClick(View v) {
                 generateTable(tempSnapShot,"",false,true);
             }
+
         });
         allResultDecks = new ArrayList<>();
         addDatabaseListener();
@@ -91,43 +98,11 @@ public class CustomFragment extends Fragment {
         this.searchView.setOnQueryTextListener(new DatabaseSearchOnQueryTextListener(this));
     }
 
-    private void setTempSnapShot(DataSnapshot snapshot) {
-        this.tempSnapShot = snapshot;
-    }
-
-    public DataSnapshot getTempSnapShot() {
-        return this.tempSnapShot;
-    }
-
-
-
-    private void addDatabaseListener() {
-        DatabaseReference decksRef = database.getReference().child("decks");
-        decksRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                setTempSnapShot(snapshot);
-                generateTable(snapshot,"",false,false);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(),"Could not connect to database, try again later",Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private boolean matchTerm(String search, String name) {
-        if(search.length() == 0) {
-            return true;
-        } if(search.length() > name.length()) {
-            return false;
-        } else if(name.substring(0,search.length()).toLowerCase().equals(search.toLowerCase())) {
-            return true;
-        }
-        return  false;
-    }
-
+    //Generates the table containing all the Decks from the database
+    //dataSnapshot: Snapshot of the database
+    //search: The string to filter the Decks by (if any)
+    //sortByDownload: Whether to sort the Decks by downloads or not
+    //sortByDate: Whether to sort the Dates by downloads or not
     public void generateTable(DataSnapshot dataSnapshot, String search, boolean sortByDownload, boolean sortByDate) {
         Map<String,Object> results = (Map<String, Object>) dataSnapshot.getValue();
         if(getActivity() != null) {
@@ -203,10 +178,11 @@ public class CustomFragment extends Fragment {
                     tableRow.addView(sizeView);
                     tableRow.addView(downloadsView);
                     tableRow.setOnClickListener(new View.OnClickListener() {
+
+                        //When a Deck is pressed, display the selected Deck
                         @Override
-                        public void onClick(View v) {
-                            onDeckSelectedToDownload(resultDeck);
-                        }
+                        public void onClick(View v) { onDeckSelectedToDownload(resultDeck); }
+
                     });
                     tableLayout.addView(tableRow);
                 }
@@ -214,6 +190,51 @@ public class CustomFragment extends Fragment {
         }
     }
 
+    //Adds a listener to the database connection instance in order to grab a snapshot of the database to process
+    private void addDatabaseListener() {
+        DatabaseReference decksRef = database.getReference().child("decks");
+        decksRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            //When the database snapshot is available, save to local variables and update the table accordingly
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                setTempSnapShot(snapshot);
+                generateTable(snapshot,"",false,false);
+            }
+
+            //If the connection to the database is interrupted, display a Toast error to the user
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(),"Could not connect to database, try again later",Toast.LENGTH_LONG).show();
+            }
+
+        });
+    }
+
+    //Setter for the local DataSnapshot that holds a snapshot of the database
+    //snapshot: DataSnapshot to set
+    private void setTempSnapShot(DataSnapshot snapshot) {
+        this.tempSnapShot = snapshot;
+    }
+
+    //Determines if a search matches a Deck name
+    //search: The search made to match
+    //name: The Deck name to match
+    //Returns: Whether or not the search matches the term
+    private boolean matchTerm(String search, String name) {
+        if(search.length() == 0) {
+            return true;
+        } if(search.length() > name.length()) {
+            return false;
+        } else if(name.substring(0,search.length()).toLowerCase().equals(search.toLowerCase())) {
+            return true;
+        }
+        return  false;
+    }
+
+    //Sorts the ResultDecks by number of downloads (high-low)
+    //resultDecks: ArrayList of ResultDecks to sort
+    //Returns: Sorted ArrayList of ResultDecks
     private ArrayList<ResultDeck> sortByDownloads(ArrayList<ResultDeck> resultDecks) {
         ArrayList<ResultDeck> sortedResultDecks = new ArrayList<>();
         while(resultDecks.size() > 0) {
@@ -231,6 +252,9 @@ public class CustomFragment extends Fragment {
         return sortedResultDecks;
     }
 
+    //Sorts the ResultDecks by date (most-least recent)
+    //resultDecks: ArrayList of ResultDecks to sort
+    //Returns: Sorted ArrayList of ResultDecks
     private ArrayList<ResultDeck> sortByDate(ArrayList<ResultDeck> resultDecks) {
         ArrayList<ResultDeck> sortedResultDecks = new ArrayList<>();
         while(resultDecks.size() > 0) {
@@ -250,14 +274,16 @@ public class CustomFragment extends Fragment {
         return sortedResultDecks;
     }
 
+    //Displays the selected Deck to the user on a popup
+    //resultDeck: ResultDeck instance to display (representative of a Deck)
     private void onDeckSelectedToDownload(ResultDeck resultDeck) {
         DatabaseReference deckRef = database.getReference("decks/"+resultDeck.getId());
         deckRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            //Grabs the selected Deck's information from the database
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Map<String,Object> deckMap = (Map<String, Object>) snapshot.getValue();
-
-                View view = getView();
                 LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View popUpView = inflater.inflate(R.layout.deck_download_overlay,null);
                 int width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
@@ -274,17 +300,12 @@ public class CustomFragment extends Fragment {
                 easyCount.setText(String.valueOf((int) (long) deckMap.get("easyCount")));
                 mediumCount.setText(String.valueOf((int) (long) deckMap.get("mediumCount")));
                 hardCount.setText(String.valueOf((int) (long) deckMap.get("hardCount")));
-
                 Button downloadButton = (Button) popUpView.findViewById(R.id.customDownloadButton);
                 TextView exitButton = (TextView) popUpView.findViewById(R.id.customDownloadExitButton);
-
-
-
-
-
                 final PopupWindow popUp = new PopupWindow(popUpView,width,height,true);
-
                 downloadButton.setOnClickListener(new View.OnClickListener() {
+
+                    //When the Download button is clicked, attempt to convert the Deck's information into a Deck instance to save locally
                     @Override
                     public void onClick(View v) {
                         String name = (String) deckMap.get("name");
@@ -295,6 +316,8 @@ public class CustomFragment extends Fragment {
                         String[] hardCards = new String[(int) (long) deckMap.get("hardCount")];
                         CountDownLatch cdLatch = new CountDownLatch(3);
                         deckRef.child("easyCards").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            //Asynchronously retrieve all easy cards
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for(int i = 0; i < easyCards.length;i++) {
@@ -302,12 +325,14 @@ public class CustomFragment extends Fragment {
                                 }
                                 cdLatch.countDown();
                             }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
+
                         });
                         deckRef.child("mediumCards").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            //Asynchronously retrieve all medium cards
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for(int i = 0; i < mediumCards.length;i++) {
@@ -315,12 +340,13 @@ public class CustomFragment extends Fragment {
                                 }
                                 cdLatch.countDown();
                             }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
                         });
                         deckRef.child("hardCards").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            //Asynchronously retrieve all hard cards
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for(int i = 0; i < hardCards.length;i++) {
@@ -328,12 +354,14 @@ public class CustomFragment extends Fragment {
                                 }
                                 cdLatch.countDown();
                             }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) { }
+
                         });
                         new Thread(new Runnable() {
+
+                            //Asynchronously process the Deck details to save locally as a json
                             @Override
                             public void run() {
                                 try {
@@ -342,7 +370,6 @@ public class CustomFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                                 int iconId = (int) (long) deckMap.get("iconId");
-                                System.out.println("ALL: " + easyCards);
                                 Deck newDeck = new Deck(name, description, author, easyCards, mediumCards, hardCards, iconId, true, 0, false);
                                 try {
                                     newDeck.saveJsonToFile(getContext(), false);
@@ -352,35 +379,37 @@ public class CustomFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                                 deckRef.child("downloads").setValue((int) (long) deckMap.get("downloads") + 1);
-
                             }
+
                         }).start();
                         popUp.dismiss();
                         Toast.makeText(getContext(),"Deck Successfully Downloaded!",Toast.LENGTH_SHORT);
                     }
 
                 });
-
                 exitButton.setOnClickListener(new View.OnClickListener() {
+
+                    //When exit button on overlay is clicked, popup is dismissed
                     @Override
                     public void onClick(View v) {
                         popUp.dismiss();
                     }
-                });
 
+                });
                 popUp.showAtLocation(getView(),Gravity.CENTER,0,0);
             }
 
+            //If database connection is severed, display an error
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(),"Could not connect to database, try again later",Toast.LENGTH_LONG).show();
-            }
-        });
+            public void onCancelled(@NonNull DatabaseError error) { Toast.makeText(getContext(),"Could not connect to database, try again later",Toast.LENGTH_LONG).show(); }
 
+        });
     }
 
-
-
-
+    //Getter for the local DataSnapshot variable
+    //Returns: local DataSnapshot variable
+    public DataSnapshot getTempSnapShot() {
+        return this.tempSnapShot;
+    }
 
 }
