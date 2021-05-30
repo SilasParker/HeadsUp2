@@ -4,8 +4,10 @@ package com.silas.headsup;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.text.LineBreaker;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 public class CustomFragment extends Fragment {
 
@@ -129,6 +132,9 @@ public class CustomFragment extends Fragment {
         Map<String,Object> results = (Map<String, Object>) dataSnapshot.getValue();
         if(getActivity() != null) {
             TableLayout tableLayout = (TableLayout) getActivity().findViewById(R.id.customTableLayout);
+            TableRow headRow = (TableRow) tableLayout.getChildAt(0);
+            tableLayout.removeAllViewsInLayout();
+            tableLayout.addView(headRow);
             allResultDecks.clear();
             for (int i = 1; i < tableLayout.getChildCount(); i++) {
                 View child = tableLayout.getChildAt(i);
@@ -168,14 +174,29 @@ public class CustomFragment extends Fragment {
                 }
                 for (ResultDeck resultDeck : allResultDecks) {
                     TableRow tableRow = new TableRow(getContext());
-                    tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+                    tableRow.setPadding(0,20,0,20);
+                    tableRow.setLayoutParams(layoutParams);
+                    tableRow.setBackground(getResources().getDrawable(R.drawable.custom_deck_background));
                     TextView nameView = new TextView(getContext());
                     TextView authorView = new TextView(getContext());
                     TextView sizeView = new TextView(getContext());
                     TextView downloadsView = new TextView(getContext());
-                    nameView.setText(resultDeck.getName());
-                    authorView.setText(resultDeck.getAuthor());
+                    String nameText = resultDeck.getName();
+                    if(nameText.length() > 20) {
+                        nameText = nameText.substring(0,16)+"...";
+                    }
+                    nameView.setText(" "+nameText);
+                    String authorText = resultDeck.getAuthor();
+                    if(authorText.length() > 10) {
+                        authorText = authorText.substring(0,6)+"...";
+                    }
+                    authorView.setGravity(Gravity.CENTER);
+                    authorView.setText(authorText);
+                    authorView.setBreakStrategy(LineBreaker.BREAK_STRATEGY_BALANCED);
+                    sizeView.setGravity(Gravity.CENTER);
                     sizeView.setText(String.valueOf(resultDeck.getSize()));
+                    downloadsView.setGravity(Gravity.CENTER);
                     downloadsView.setText(String.valueOf(resultDeck.getDownloads()));
                     tableRow.addView(nameView);
                     tableRow.addView(authorView);
@@ -272,12 +293,14 @@ public class CustomFragment extends Fragment {
                         String[] easyCards = new String[(int) (long) deckMap.get("easyCount")];
                         String[] mediumCards = new String[(int) (long) deckMap.get("mediumCount")];
                         String[] hardCards = new String[(int) (long) deckMap.get("hardCount")];
+                        CountDownLatch cdLatch = new CountDownLatch(3);
                         deckRef.child("easyCards").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for(int i = 0; i < easyCards.length;i++) {
                                     easyCards[i] = snapshot.child(String.valueOf(i)).getValue().toString();
                                 }
+                                cdLatch.countDown();
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
@@ -290,6 +313,7 @@ public class CustomFragment extends Fragment {
                                 for(int i = 0; i < mediumCards.length;i++) {
                                     mediumCards[i] = snapshot.child(String.valueOf(i)).getValue().toString();
                                 }
+                                cdLatch.countDown();
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
@@ -302,25 +326,39 @@ public class CustomFragment extends Fragment {
                                 for(int i = 0; i < hardCards.length;i++) {
                                     hardCards[i] = snapshot.child(String.valueOf(i)).getValue().toString();
                                 }
+                                cdLatch.countDown();
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
                             }
                         });
-                        int iconId = (int) (long) deckMap.get("iconId");
-                        Deck newDeck = new Deck(name,description,author,easyCards,mediumCards,hardCards,iconId,true,0,false);
-                        try {
-                            newDeck.saveJsonToFile(getContext(),false);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        deckRef.child("downloads").setValue((int) (long) deckMap.get("downloads")+1);
-                        popUp.dismiss();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    cdLatch.await();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                int iconId = (int) (long) deckMap.get("iconId");
+                                System.out.println("ALL: " + easyCards);
+                                Deck newDeck = new Deck(name, description, author, easyCards, mediumCards, hardCards, iconId, true, 0, false);
+                                try {
+                                    newDeck.saveJsonToFile(getContext(), false);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                deckRef.child("downloads").setValue((int) (long) deckMap.get("downloads") + 1);
 
+                            }
+                        }).start();
+                        popUp.dismiss();
+                        Toast.makeText(getContext(),"Deck Successfully Downloaded!",Toast.LENGTH_SHORT);
                     }
+
                 });
 
                 exitButton.setOnClickListener(new View.OnClickListener() {

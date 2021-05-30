@@ -11,6 +11,7 @@
         android:id="@+id/gameCardName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
         android:text="EXAMPLE CARD"
         android:textSize="60sp"
         android:visibility="invisible"

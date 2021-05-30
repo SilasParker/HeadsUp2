@@ -59,8 +59,11 @@ public class GridAdapter extends BaseAdapter {
 
         TextView deckNameView = convertView.findViewById(R.id.deck_name);
         ImageView iconView = convertView.findViewById(R.id.icon);
-
-        deckNameView.setText(decks.get(position).getName());
+        String deckName = decks.get(position).getName();
+        if(deckName.length() > 25) {
+            deckName = deckName.substring(0,21)+"...";
+        }
+        deckNameView.setText(deckName);
         iconView.setImageResource(decks.get(position).getIconId());
         ImageView favouriteView = convertView.findViewById(R.id.favourite_star);
 

@@ -32,7 +32,7 @@ import java.util.Locale;
 
 public class CreateDeckActivity extends AppCompatActivity {
     private EditText deckNameEntry, authorNameEntry, descriptionEntry, easyCardEntry, mediumCardEntry, hardCardEntry;
-    private TextView easyCardCountView, mediumCardCountView, hardCardCountView;
+    private TextView easyCardCountView, mediumCardCountView, hardCardCountView, totalCardsView;
     private Spinner iconSpinner;
     private ImageView exitButton;
     private DatabaseReference database = FirebaseDatabase.getInstance().getReference();
@@ -55,6 +55,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         this.easyCardCountView = findViewById(R.id.customCreateEasyTotal);
         this.mediumCardCountView = findViewById(R.id.customCreateMediumTotal);
         this.hardCardCountView = findViewById(R.id.customCreateHardTotal);
+        this.totalCardsView = findViewById(R.id.customCreateTotalCards);
 
         ArrayList<Integer> iconsList = new ArrayList<>();
         iconsList.add(R.drawable.ic_baseline_computer_24);
@@ -96,13 +97,20 @@ public class CreateDeckActivity extends AppCompatActivity {
         this.easyCardEntry.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                String entered = easyCardEntry.getText().toString();
-                String[] lines = entered.split("\n");
-                easyCardCountView.setText("Total: "+String.valueOf(lines.length));
+
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String entered = easyCardEntry.getText().toString();
+                String[] lines = new String[0];
+                if(!entered.equals("")) {
+                    lines = entered.split("\n");
+                }
+                easyCardCount = lines.length;
+                easyCardCountView.setText("Total: " + String.valueOf(lines.length));
+                totalCardsView.setText("Total Cards: " + String.valueOf(easyCardCount + mediumCardCount + hardCardCount));
+            }
 
             @Override
             public void afterTextChanged(Editable s) { }
@@ -111,13 +119,21 @@ public class CreateDeckActivity extends AppCompatActivity {
         this.mediumCardEntry.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                String entered = easyCardEntry.getText().toString();
-                String[] lines = entered.split("\n");
-                easyCardCountView.setText("Total: "+String.valueOf(lines.length));
+
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String entered = mediumCardEntry.getText().toString();
+                String[] lines = new String[0];
+                if(!entered.equals("")) {
+                    lines = entered.split("\n");
+
+                }
+                mediumCardCount = lines.length;
+                mediumCardCountView.setText("Total: " + String.valueOf(lines.length));
+                totalCardsView.setText("Total Cards: " + String.valueOf(easyCardCount + mediumCardCount + hardCardCount));
+            }
 
             @Override
             public void afterTextChanged(Editable s) { }
@@ -126,13 +142,20 @@ public class CreateDeckActivity extends AppCompatActivity {
         this.hardCardEntry.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                String entered = easyCardEntry.getText().toString();
-                String[] lines = entered.split("\n");
-                easyCardCountView.setText("Total: "+String.valueOf(lines.length));
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String entered = hardCardEntry.getText().toString();
+                String[] lines = new String[0];
+                if(!entered.equals("")) {
+                    lines = entered.split("\n");
+
+                }
+                hardCardCount = lines.length;
+                hardCardCountView.setText("Total: " + String.valueOf(lines.length));
+                totalCardsView.setText("Total Cards: " + String.valueOf(easyCardCount + mediumCardCount + hardCardCount));
+            }
 
             @Override
             public void afterTextChanged(Editable s) { }
@@ -168,7 +191,8 @@ public class CreateDeckActivity extends AppCompatActivity {
         easyCards = this.easyCardEntry.getText().toString().split("\n");
         mediumCards = this.mediumCardEntry.getText().toString().split("\n");
         hardCards = this.hardCardEntry.getText().toString().split("\n");
-        if(easyCards.length == 0) {
+        System.out.println("CARDS: "+easyCards.length);
+        if(easyCards.length == 0 || (easyCards.length == 1 && easyCards[0].equals(""))) {
             validDeck = false;
             error += "Decks require at least 1 easy card";
         }
@@ -183,6 +207,7 @@ public class CreateDeckActivity extends AppCompatActivity {
             newDeckRef.child("easyCount").setValue(easyCards.length);
             newDeckRef.child("mediumCount").setValue(mediumCards.length);
             newDeckRef.child("hardCount").setValue(hardCards.length);
+            newDeckRef.child("deckSize").setValue(easyCards.length+mediumCards.length+hardCards.length);
             Date date = new Date();
             ZoneId timeZone = ZoneId.systemDefault();
             LocalDate localDate = date.toInstant().atZone(timeZone).toLocalDate();

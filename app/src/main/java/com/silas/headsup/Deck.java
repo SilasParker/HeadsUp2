@@ -60,12 +60,12 @@ public class Deck implements Parcelable {
 
     public static final Creator<Deck> CREATOR = new Creator<Deck>() {
         @Override
-        public com.silas.headsup.Deck createFromParcel(Parcel in) {
+        public Deck createFromParcel(Parcel in) {
             return new com.silas.headsup.Deck(in);
         }
 
         @Override
-        public com.silas.headsup.Deck[] newArray(int size) {
+        public Deck[] newArray(int size) {
             return new com.silas.headsup.Deck[size];
         }
     };
@@ -180,22 +180,21 @@ public class Deck implements Parcelable {
         JSONObject deck = this.getAsJson();
         String deckString = deck.toString();
         String deckFileName = this.getDirectorySafeName()+".json";
-        System.out.println("DECK FILE: "+deckFileName);
-        File file = new File(context.getFilesDir(),deckFileName);
-        if(!file.exists()) {
-            System.out.println("file didnt exist");
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(deckString);
-            bufferedWriter.close();
-        } else if(overwrite) {
-            System.out.println("file existed and overwritten");
-            FileWriter fw = new FileWriter(file,false);
-            BufferedWriter bufferedWriter = new BufferedWriter(fw);
-            bufferedWriter.write(deckString);
-            bufferedWriter.close();
-        } else if(file.exists() && !overwrite) {
-            Toast.makeText(context.getApplicationContext(), "Couldn't download because name is too similar to existing deck",Toast.LENGTH_LONG).show();
+        if(context != null) {
+            File file = new File(context.getFilesDir(), deckFileName);
+            if (!file.exists()) {
+                FileWriter fileWriter = new FileWriter(file);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                bufferedWriter.write(deckString);
+                bufferedWriter.close();
+            } else if (overwrite) {
+                FileWriter fw = new FileWriter(file, false);
+                BufferedWriter bufferedWriter = new BufferedWriter(fw);
+                bufferedWriter.write(deckString);
+                bufferedWriter.close();
+            } else if (file.exists() && !overwrite) {
+                Toast.makeText(context.getApplicationContext(), "Couldn't download because name is too similar to existing deck", Toast.LENGTH_LONG).show();
+            }
         }
     }
 

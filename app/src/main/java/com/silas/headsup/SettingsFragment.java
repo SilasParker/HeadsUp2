@@ -166,11 +166,11 @@ public class SettingsFragment extends Fragment {
         RadioGroup radGroup = getActivity().findViewById(R.id.settingsDifficultyRadioGroup);
         RadioButton radBut = getActivity().findViewById(radGroup.getCheckedRadioButtonId());
         String difficultyStr = (String) radBut.getText();
-        int difficulty = 0;
+        int difficulty = 1;
         if(difficultyStr.equals("MEDIUM")) {
-            difficulty = 1;
-        } else if(difficultyStr.equals("HARD")) {
             difficulty = 2;
+        } else if(difficultyStr.equals("HARD")) {
+            difficulty = 3;
         }
 
         boolean bonus = ((Switch) getActivity().findViewById(R.id.settingsBonusSwitch)).isChecked();

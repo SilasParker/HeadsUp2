@@ -1,8 +1,4 @@
 package com.silas.headsup;
-//TODO:
-/*
-make it so orientation is handled correctly
- */
 
 
 import android.content.Context;
@@ -44,7 +40,13 @@ public class MainActivity extends AppCompatActivity
 
         sharedPrefs = getSharedPreferences("headsUpPrefs", Context.MODE_PRIVATE);
         if(!sharedPrefs.contains("firstAccess")) {
-            setUpAppForFirstRun();
+            try {
+                setUpAppForFirstRun();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
@@ -62,15 +64,7 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
 
         }
-/*
-        try {
-            test();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
+
 
 
     }
@@ -261,7 +255,7 @@ public class MainActivity extends AppCompatActivity
         return arrayToReturn;
     }
 
-    private void setUpAppForFirstRun() {
+    private void setUpAppForFirstRun() throws IOException, JSONException {
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putFloat("timer",120f);
         editor.putInt("difficulty",2);
@@ -271,6 +265,8 @@ public class MainActivity extends AppCompatActivity
         editor.putInt("textColour",4);
         editor.putBoolean("firstAccess",false);
         editor.commit();
+        Deck defaultDeck = new Deck("Best Lecturers","The best lecturers at Brighton University","Silas Parker",new String[] {"Khuong"},new String[] {"Dr. Nguyen"}, new String[] {"Khuong Nguyen"}, 4, false, 0, false);
+        defaultDeck.saveJsonToFile(this,true);
     }
 
     private void test() throws IOException, JSONException {

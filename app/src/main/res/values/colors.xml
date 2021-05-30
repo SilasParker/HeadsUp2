@@ -10,5 +10,9 @@
     <color name="blue">#FF0000FF</color>
     <color name="red">#FFFF0000</color>
     <color name="green">#FF00FF00</color>
+    <color name="green_start">#FF00FF00</color>
+    <color name="green_end">#FF049E04</color>
     <color name="search_blue">#FF2B99C2</color>
+    <color name="orange_start">#FF9800</color>
+    <color name="orange_end">#FF5722</color>
 </resources>

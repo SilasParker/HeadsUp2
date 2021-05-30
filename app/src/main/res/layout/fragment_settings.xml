@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/holo_blue_light">
+    android:background="@drawable/background_main">
 
 
     <TextView
@@ -83,12 +83,14 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
+            android:buttonTint="@color/purple_500"
             android:text="EASY" />
 
         <RadioButton
             android:id="@+id/settingsMediumRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/purple_500"
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="MEDIUM" />
@@ -97,6 +99,7 @@
             android:id="@+id/settingsHardRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/purple_500"
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="HARD" />
@@ -118,6 +121,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
+        android:theme="@style/CustomSwitch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsDifficultyRadioGroup"
         android:layout_marginTop="20dp"
@@ -140,6 +144,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
+        android:theme="@style/CustomSwitch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsBonusSwitch"
         android:layout_marginTop="20dp"

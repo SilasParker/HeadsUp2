@@ -4,13 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_light">
+    android:background="@drawable/background_main">
 
     <SearchView
         android:id="@+id/customSearch"
-        android:background="@color/search_blue"
+        android:background="@drawable/search_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:queryHint="Search here..."
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        app:iconifiedByDefault="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,17 +36,22 @@
             android:id="@+id/customTableLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             android:stretchColumns="*"
             >
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_table_header"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name of Deck"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:gravity="center"
                 />
@@ -50,6 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Author"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:gravity="center"/>
 
@@ -78,6 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:backgroundTint="@color/purple_500"
         app:srcCompat="@drawable/ic_baseline_file_download_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,6 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:backgroundTint="@color/purple_200"
         android:onClick="openAddDeckScreen"
         app:srcCompat="@drawable/ic_baseline_add_box_24"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -101,6 +114,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:backgroundTint="@color/purple_500"
         app:srcCompat="@drawable/ic_baseline_calendar_today_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
